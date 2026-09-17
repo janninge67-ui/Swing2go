@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kassan avbröts — Swing2GoUF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,900&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a href="/" class="brand">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 3v18M6 3l12 4-12 4" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        Swing2GoUF
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap" style="grid-template-columns: 1fr;">
+      <div>
+        <h1>Kassan avbröts.</h1>
+        <p>Inget drogs från ditt kort. Din varukorg väntar på dig när du är redo.</p>
+        <a href="/" class="btn btn-primary">Tillbaka till butiken</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="year"></span> Swing2GoUF. Spela bollen som den ligger.</p>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

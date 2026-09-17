@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swing2GoUF — golfutrustning för hela rundan</title>
+  <meta name="description" content="Bollar, handskar, tees och annan golfutrustning för spelare som håller sitt eget resultat." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a href="/" class="brand">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 3v18M6 3l12 4-12 4" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        Swing2GoUF
+      </a>
+      <nav class="site-nav">
+        <a href="#catalog">Bollar</a>
+        <a href="#catalog">Utrustning</a>
+        <a href="#catalog">Kläder</a>
+      </nav>
+      <button class="cart-button" id="cart-button" aria-label="Öppna varukorg">
+        Varukorg <span class="cart-count" id="cart-count" style="display:none">0</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Allt mellan tee och hål.</h1>
+        <p>Bollar, handskar och den lilla utrustningen som faktiskt används — utvald för dig som håller ditt eget resultat.</p>
+        <a href="#catalog" class="btn btn-primary">Se hela sortimentet</a>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 200 200" width="100%">
+          <circle cx="100" cy="100" r="72" stroke="#1B4332" stroke-width="3" fill="none"/>
+          <g fill="#1B4332">
+            <circle cx="76" cy="76" r="4"/><circle cx="100" cy="68" r="4"/><circle cx="124" cy="76" r="4"/>
+            <circle cx="64" cy="100" r="4"/><circle cx="88" cy="96" r="4"/><circle cx="112" cy="96" r="4"/><circle cx="136" cy="100" r="4"/>
+            <circle cx="76" cy="124" r="4"/><circle cx="100" cy="128" r="4"/><circle cx="124" cy="124" r="4"/>
+            <circle cx="100" cy="100" r="4"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog" id="catalog">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Sortimentet</h2>
+        <div class="category-filters">
+          <button class="active" data-category="all">Alla</button>
+          <button data-category="balls">Bollar</button>
+          <button data-category="gear">Utrustning</button>
+          <button data-category="apparel">Kläder</button>
+        </div>
+      </div>
+      <div class="product-grid" id="product-grid">
+        <div class="catalog-empty">Laddar sortimentet…</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="year"></span> Swing2GoUF. Spela bollen som den ligger.</p>
+      <div class="footer-links">
+        <a href="#">Frakt</a>
+        <a href="#">Returer</a>
+        <a href="#">Kontakt</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Varukorg">
+    <div class="cart-header">
+      <h2>Din varukorg</h2>
+      <button class="cart-close" id="cart-close" aria-label="Stäng varukorg">×</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span>Delsumma</span>
+        <span id="cart-subtotal-amount">0,00 kr</span>
+      </div>
+      <button class="btn btn-primary" id="checkout-button" disabled>Till kassan</button>
+      <div class="checkout-error" id="checkout-error"></div>
+    </div>
+  </aside>
+
+  <script src="js/config.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/main.js"></script>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

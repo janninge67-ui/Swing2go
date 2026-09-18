@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin — Swing2Go Golf UF</title>
+  <link rel="icon" href="../img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    body { padding: 40px 16px 80px; }
+    .admin-wrap { max-width: 900px; margin: 0 auto; }
+    .admin-header { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+    .admin-header img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+    .admin-header h1 { font-family: var(--font-display); font-size: 1.5rem; margin: 0; }
+
+    .login-card {
+      max-width: 360px; margin: 80px auto 0; background: #fff;
+      border: 1px solid var(--line); border-radius: 4px; padding: 32px;
+    }
+    .login-card h2 { font-family: var(--font-display); margin: 0 0 6px; }
+    .login-card p { color: var(--ink-soft); font-size: 0.9rem; margin: 0 0 20px; }
+    .login-card input {
+      width: 100%; padding: 12px 14px; border: 1px solid var(--line-strong);
+      border-radius: 3px; font-size: 1rem; font-family: inherit; margin-bottom: 12px;
+    }
+    .login-card .btn { width: 100%; }
+    .login-error { color: var(--flag-red); font-size: 0.88rem; margin: 10px 0 0; display: none; }
+
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+
+    table.product-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); }
+    table.product-table th, table.product-table td {
+      text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 0.9rem; vertical-align: middle;
+    }
+    table.product-table th { background: var(--sand); font-weight: 600; }
+    table.product-table input, table.product-table select, table.product-table textarea {
+      width: 100%; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: 3px;
+      font-family: inherit; font-size: 0.88rem;
+    }
+    table.product-table textarea { min-height: 44px; resize: vertical; }
+    .row-actions { display: flex; gap: 8px; white-space: nowrap; }
+    .row-actions button { padding: 6px 12px; font-size: 0.8rem; border-radius: 3px; border: 1px solid var(--line-strong); background: #fff; }
+    .row-actions .save-btn { background: var(--fairway); color: var(--chalk); border-color: var(--fairway); }
+    .row-actions .delete-btn { color: var(--flag-red); border-color: var(--flag-red); }
+
+    .add-product-card {
+      background: #fff; border: 1px solid var(--line); padding: 24px; margin-top: 28px;
+    }
+    .add-product-card h3 { font-family: var(--font-display); margin: 0 0 16px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-grid label { display: block; font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 4px; }
+    .form-grid input, .form-grid select, .form-grid textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 3px; font-family: inherit; font-size: 0.9rem;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .status-msg { font-size: 0.88rem; margin-top: 12px; display: none; }
+    .status-msg.success { color: var(--fairway); }
+    .status-msg.error { color: var(--flag-red); }
+
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      table.product-table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Inloggning -->
+  <div class="login-card" id="login-view">
+    <h2>Admin</h2>
+    <p>Logga in för att hantera Swing2Go Golf UF:s sortiment.</p>
+    <input type="password" id="password-input" placeholder="Lösenord" autocomplete="current-password" />
+    <button class="btn btn-primary" id="login-button">Logga in</button>
+    <div class="login-error" id="login-error">Fel lösenord. Försök igen.</div>
+  </div>
+
+  <!-- Adminvy -->
+  <div class="admin-wrap" id="admin-view" hidden>
+    <div class="admin-header">
+      <img src="../img/logo.jpg" alt="Swing2Go Golf UF" />
+      <h1>Hantera sortiment</h1>
+    </div>
+
+    <div class="toolbar">
+      <span id="product-count" style="color: var(--ink-soft); font-size: 0.9rem;"></span>
+      <button class="btn btn-outline" id="logout-button">Logga ut</button>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="product-table" id="product-table">
+        <thead>
+          <tr>
+            <th style="min-width:160px;">Namn</th>
+            <th style="min-width:180px;">Beskrivning</th>
+            <th>Kategori</th>
+            <th style="width:90px;">Pris (kr)</th>
+            <th style="width:70px;">Lager</th>
+            <th style="width:140px;"></th>
+          </tr>
+        </thead>
+        <tbody id="product-table-body"></tbody>
+      </table>
+    </div>
+
+    <div class="add-product-card">
+      <h3>Lägg till ny produkt</h3>
+      <div class="form-grid">
+        <div>
+          <label>Namn</label>
+          <input type="text" id="new-name" placeholder="T.ex. Tour Line golfbollar (dussin)" />
+        </div>
+        <div>
+          <label>Kategori</label>
+          <select id="new-category">
+            <option value="balls">Bollar</option>
+            <option value="gear">Utrustning</option>
+            <option value="apparel">Kläder</option>
+          </select>
+        </div>
+        <div class="full">
+          <label>Beskrivning</label>
+          <textarea id="new-description" placeholder="Kort beskrivning som visas på produktkortet"></textarea>
+        </div>
+        <div>
+          <label>Pris (kr)</label>
+          <input type="number" id="new-price" min="0" step="1" placeholder="299" />
+        </div>
+        <div>
+          <label>Lagersaldo</label>
+          <input type="number" id="new-stock" min="0" step="1" placeholder="50" />
+        </div>
+        <div>
+          <label>Ikon</label>
+          <select id="new-icon">
+            <option value="ball">Golfboll</option>
+            <option value="glove">Handske</option>
+            <option value="tee">Tee</option>
+            <option value="towel">Handduk</option>
+            <option value="tool">Lagningsverktyg</option>
+            <option value="shirt">Tröja</option>
+          </select>
+        </div>
+        <div>
+          <label>Accentfärg</label>
+          <input type="color" id="new-accent" value="#1B4332" style="height: 42px; padding: 4px;" />
+        </div>
+      </div>
+      <button class="btn btn-primary" id="add-product-button" style="margin-top: 16px;">Lägg till produkt</button>
+      <div class="status-msg" id="add-status"></div>
+    </div>
+  </div>
+
+  <script>
+    const TOKEN_KEY = 'swing2gouf_admin_token';
+    const CATEGORY_LABELS = { balls: 'Bollar', gear: 'Utrustning', apparel: 'Kläder' };
+
+    const loginView = document.getElementById('login-view');
+    const adminView = document.getElementById('admin-view');
+
+    function getToken() {
+      return sessionStorage.getItem(TOKEN_KEY);
+    }
+
+    function setToken(token) {
+      sessionStorage.setItem(TOKEN_KEY, token);
+    }
+
+    function clearToken() {
+      sessionStorage.removeItem(TOKEN_KEY);
+    }
+
+    function showLogin() {
+      loginView.hidden = false;
+      adminView.hidden = true;
+    }
+
+    function showAdmin() {
+      loginView.hidden = true;
+      adminView.hidden = false;
+      loadProducts();
+    }
+
+    // ---------- Inloggning ----------
+    document.getElementById('login-button').addEventListener('click', login);
+    document.getElementById('password-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') login();
+    });
+
+    async function login() {
+      const password = document.getElementById('password-input').value;
+      const errorEl = document.getElementById('login-error');
+      errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Inloggning misslyckades.');
+        setToken(data.token);
+        showAdmin();
+      } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.style.display = 'block';
+      }
+    }
+
+    document.getElementById('logout-button').addEventListener('click', () => {
+      clearToken();
+      showLogin();
+    });
+
+    // ---------- Produktlista ----------
+    async function apiFetch(url, options = {}) {
+      const res = await fetch(url, {
+        ...options,
+        headers: {
+          ...(options.headers || {}),
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      if (res.status === 401) {
+        clearToken();
+        showLogin();
+        throw new Error('Sessionen har gått ut.');
+      }
+      return res;
+    }
+
+    async function loadProducts() {
+      const tbody = document.getElementById('product-table-body');
+      tbody.innerHTML = `<tr><td colspan="6">Laddar…</td></tr>`;
+      try {
+        const res = await apiFetch('/api/admin/products');
+        const products = await res.json();
+        document.getElementById('product-count').textContent = `${products.length} produkter`;
+        renderTable(products);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6">${err.message}</td></tr>`;
+      }
+    }
+
+    function renderTable(products) {
+      const tbody = document.getElementById('product-table-body');
+      tbody.innerHTML = products
+        .map(
+          (p) => `
+        <tr data-id="${p.id}">
+          <td><input type="text" class="f-name" value="${escapeAttr(p.name)}" /></td>
+          <td><textarea class="f-description">${escapeHtml(p.description || '')}</textarea></td>
+          <td>
+            <select class="f-category">
+              ${Object.entries(CATEGORY_LABELS)
+                .map(([val, label]) => `<option value="${val}" ${p.category === val ? 'selected' : ''}>${label}</option>`)
+                .join('')}
+            </select>
+          </td>
+          <td><input type="number" class="f-price" min="0" step="1" value="${(p.price_cents / 100).toFixed(0)}" /></td>
+          <td><input type="number" class="f-stock" min="0" step="1" value="${p.stock}" /></td>
+          <td>
+            <div class="row-actions">
+              <button class="save-btn" data-action="save">Spara</button>
+              <button class="delete-btn" data-action="delete">Ta bort</button>
+            </div>
+          </td>
+        </tr>`
+        )
+        .join('');
+
+      tbody.querySelectorAll('[data-action="save"]').forEach((btn) =>
+        btn.addEventListener('click', () => saveRow(btn.closest('tr')))
+      );
+      tbody.querySelectorAll('[data-action="delete"]').forEach((btn) =>
+        btn.addEventListener('click', () => deleteRow(btn.closest('tr')))
+      );
+    }
+
+    async function saveRow(row) {
+      const id = row.dataset.id;
+      const payload = {
+        id,
+        name: row.querySelector('.f-name').value,
+        description: row.querySelector('.f-description').value,
+        category: row.querySelector('.f-category').value,
+        price_cents: Math.round(parseFloat(row.querySelector('.f-price').value || '0') * 100),
+        stock: parseInt(row.querySelector('.f-stock').value || '0', 10),
+      };
+      try {
+        const res = await apiFetch('/api/admin/products', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Kunde inte spara.');
+        loadProducts();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function deleteRow(row) {
+      const name = row.querySelector('.f-name').value;
+      if (!confirm(`Ta bort "${name}"? Detta går inte att ångra.`)) return;
+      const id = row.dataset.id;
+      try {
+        const res = await apiFetch(`/api/admin/products?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Kunde inte ta bort produkten.');
+        loadProducts();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    // ---------- Lägg till produkt ----------
+    document.getElementById('add-product-button').addEventListener('click', async () => {
+      const statusEl = document.getElementById('add-status');
+      statusEl.style.display = 'none';
+
+      const payload = {
+        name: document.getElementById('new-name').value.trim(),
+        description: document.getElementById('new-description').value.trim(),
+        category: document.getElementById('new-category').value,
+        price_cents: Math.round(parseFloat(document.getElementById('new-price').value || '0') * 100),
+        stock: parseInt(document.getElementById('new-stock').value || '0', 10),
+        icon: document.getElementById('new-icon').value,
+        accent: document.getElementById('new-accent').value,
+      };
+
+      if (!payload.name || !payload.price_cents) {
+        statusEl.textContent = 'Namn och pris krävs.';
+        statusEl.className = 'status-msg error';
+        statusEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await apiFetch('/api/admin/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Kunde inte lägga till produkten.');
+
+        statusEl.textContent = 'Produkten är tillagd.';
+        statusEl.className = 'status-msg success';
+        statusEl.style.display = 'block';
+
+        ['new-name', 'new-description', 'new-price', 'new-stock'].forEach(
+          (id) => (document.getElementById(id).value = '')
+        );
+        loadProducts();
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.className = 'status-msg error';
+        statusEl.style.display = 'block';
+      }
+    });
+
+    // ---------- Hjälpfunktioner ----------
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+    function escapeAttr(str) {
+      return escapeHtml(str).replace(/"/g, '&quot;');
+    }
+
+    // ---------- Start ----------
+    if (getToken()) {
+      showAdmin();
+    } else {
+      showLogin();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Environment / secrets
+.env
+.env.local
+.dev.vars
+
+# OS/editor cruft
+.DS_Store
+.vscode/
+
+# Wrangler local state (if you later use `wrangler pages dev`)
+.wrangler/

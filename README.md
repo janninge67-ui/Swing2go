@@ -64,8 +64,8 @@ gh repo create swing2gouf --public --source=. --push
 #   git push -u origin main
 ```
 
-Before you push, fill in `js/config.js` with your real Supabase URL and anon
-key (see step 1) — these are public values and are safe to commit.
+Before you push, fill in the config section at the top of `js/app.js` with
+your real Supabase URL and anon key (see step 1) — these are public values and are safe to commit.
 
 ## 4. Connect Cloudflare Pages
 
@@ -122,10 +122,8 @@ golf-store/
 ├── success.html                shown after a paid checkout
 ├── cancel.html                 shown if checkout is abandoned
 ├── css/style.css                all styling
-├── js/
-│   ├── config.js                Supabase URL + anon key (public, safe to commit)
-│   ├── icons.js                  hand-drawn SVG product art
-│   └── main.js                   catalog rendering, cart, checkout call
+├── js/app.js                     config, product icons, cart/checkout logic, and the leaf effect — all in one file
+├── img/logo.jpg                  brand logo (header, footer, favicon)
 ├── functions/api/
 │   ├── create-checkout-session.js   creates a Stripe Checkout Session
 │   └── stripe-webhook.js             records paid orders in Supabase
@@ -141,6 +139,6 @@ golf-store/
   yet — for a low-volume store, updating stock manually in the Supabase
   Table Editor after each sale is often good enough. For automatic
   decrementing, add a Postgres function and call it from the webhook.
-- **Product images**: swap the SVG icons in `js/icons.js` for real photos by
-  adding an `image_url` column to `products` and updating the product card
-  markup in `js/main.js`.
+- **Product images**: swap the SVG icons in the productIcon() function in
+  `js/app.js` for real photos by adding an `image_url` column to `products`
+  and updating the product card markup in the same file.

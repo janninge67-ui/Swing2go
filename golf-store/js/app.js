@@ -13,8 +13,8 @@
 // miljövariabler, och används bara inuti /functions.
 
 const SWING2GOUF_CONFIG = {
-  SUPABASE_URL: 'https://sgpxqblaylfctuufcwwv.supabase.co/rest/v1/',
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNncHhxYmxheWxmY3R1dWZjd3d2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2NzgwNjgsImV4cCI6MjEwNTI1NDA2OH0.Z9HLoTXtfv6bLwypcviIMIy9QcgdYxbDTmte8JOeboo',
+  SUPABASE_URL: 'https://sgpxqblaylfctuufcwwv.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_KBSh-hWStqfKS_EDxXMtVg_jWiUFI9O',
 };
 
 

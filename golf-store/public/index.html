@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swing2Go Golf UF — golfutrustning för hela rundan</title>
+  <meta name="description" content="Bollar, handskar, tees och annan golfutrustning för spelare som håller sitt eget resultat." />
+  <link rel="icon" href="img/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header" id="site-header">
+    <div class="wrap">
+      <a href="/" class="brand" aria-label="Swing2Go Golf UF, till startsidan">
+        <img src="img/logo.jpg" alt="Swing2Go Golf UF" class="brand-logo" />
+      </a>
+      <nav class="site-nav" id="site-nav">
+        <button data-category="all" class="active">Alla</button>
+        <button data-category="balls">Bollar</button>
+        <button data-category="gear">Utrustning</button>
+        <button data-category="apparel">Kläder</button>
+      </nav>
+      <div class="header-actions">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Öppna meny" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="cart-button" id="cart-button" aria-label="Öppna varukorg">
+          Varukorg <span class="cart-count" id="cart-count" style="display:none">0</span>
+        </button>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobile-nav">
+      <button data-category="all" class="active">Alla</button>
+      <button data-category="balls">Bollar</button>
+      <button data-category="gear">Utrustning</button>
+      <button data-category="apparel">Kläder</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Allt mellan tee och hål.</h1>
+        <p>Bollar, handskar och den lilla utrustningen som faktiskt används — utvald för dig som håller ditt eget resultat.</p>
+        <a href="#catalog" class="btn btn-primary">Se hela sortimentet</a>
+      </div>
+      <div class="hero-art">
+        <div class="hero-logo-frame">
+          <img src="img/logo.jpg" alt="Swing2Go Golf UF" class="hero-logo-img" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog" id="catalog">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Sortimentet</h2>
+        <div class="category-filters">
+          <button class="active" data-category="all">Alla</button>
+          <button data-category="balls">Bollar</button>
+          <button data-category="gear">Utrustning</button>
+          <button data-category="apparel">Kläder</button>
+        </div>
+      </div>
+      <div class="product-grid" id="product-grid">
+        <div class="catalog-empty">Laddar sortimentet…</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-brand">
+        <img src="img/logo.jpg" alt="Swing2Go Golf UF" />
+        <p>© <span id="year"></span> Swing2Go Golf UF. Spela bollen som den ligger.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Frakt</a>
+        <a href="#">Returer</a>
+        <a href="#">Kontakt</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Varukorg">
+    <div class="cart-header">
+      <h2>Din varukorg</h2>
+      <button class="cart-close" id="cart-close" aria-label="Stäng varukorg">×</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span>Delsumma</span>
+        <span id="cart-subtotal-amount">0,00 kr</span>
+      </div>
+      <button class="btn btn-primary" id="checkout-button" disabled>Betala med kort</button>
+      <button class="btn btn-outline" id="swish-checkout-button" disabled style="margin-top: 8px;">Betala med Swish</button>
+      <div class="checkout-error" id="checkout-error"></div>
+    </div>
+  </aside>
+
+  <!-- Swish -->
+  <div class="cart-overlay" id="swish-overlay"></div>
+  <div class="swish-modal" id="swish-modal" aria-label="Betala med Swish">
+    <div class="swish-modal-header">
+      <h2>Betala med Swish</h2>
+      <button class="cart-close" id="swish-close" aria-label="Stäng">×</button>
+    </div>
+
+    <div class="swish-modal-body">
+      <!-- Steg 1: kontaktuppgifter -->
+      <div id="swish-form-step">
+        <p class="swish-intro">Fyll i dina uppgifter så visar vi ett Swish-nummer och belopp du kan swisha direkt.</p>
+        <label>Namn</label>
+        <input type="text" id="swish-name" autocomplete="name" />
+        <label>E-post</label>
+        <input type="email" id="swish-email" autocomplete="email" />
+        <label>Adress</label>
+        <input type="text" id="swish-address" autocomplete="street-address" />
+        <div class="swish-form-row">
+          <div>
+            <label>Postnummer</label>
+            <input type="text" id="swish-postal" autocomplete="postal-code" />
+          </div>
+          <div>
+            <label>Ort</label>
+            <input type="text" id="swish-city" autocomplete="address-level2" />
+          </div>
+        </div>
+        <button class="btn btn-primary" id="swish-submit-button" style="width:100%; margin-top: 16px;">Visa Swish-betalning</button>
+        <div class="checkout-error" id="swish-form-error"></div>
+      </div>
+
+      <!-- Steg 2: betala -->
+      <div id="swish-pay-step" hidden>
+        <p class="swish-intro">Skanna QR-koden med Swish-appen, eller klicka på länken om du är på mobilen. Ordernummer och belopp är redan ifyllda.</p>
+        <div id="swish-qr" class="swish-qr"></div>
+        <div class="swish-order-number">Ordernummer: <strong id="swish-order-number-text"></strong></div>
+        <div class="swish-amount" id="swish-amount-text"></div>
+        <a class="btn btn-primary" id="swish-open-link" style="width:100%; display:flex;" target="_blank" rel="noopener">Öppna i Swish-appen</a>
+        <button class="btn btn-outline" id="swish-paid-button" style="width:100%; margin-top: 10px;">Jag har betalat</button>
+        <p class="swish-note">Vi bekräftar din betalning manuellt och hör av oss på e-post när ordern är på väg.</p>
+      </div>
+
+      <!-- Steg 3: klart -->
+      <div id="swish-done-step" hidden>
+        <p class="swish-intro">Tack! Vi har fått din beställning och bekräftar betalningen så snart vi ser den i Swish. Du får ett mejl när den är på väg.</p>
+        <button class="btn btn-primary" id="swish-close-done-button" style="width:100%;">Stäng</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="js/app.js"></script>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

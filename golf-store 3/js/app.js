@@ -13,8 +13,8 @@
 // miljövariabler, och används bara inuti /functions.
 
 const SWING2GOUF_CONFIG = {
-  SUPABASE_URL: 'https://YOUR-PROJECT-REF.supabase.co',
-  SUPABASE_ANON_KEY: 'YOUR-SUPABASE-ANON-PUBLIC-KEY',
+  SUPABASE_URL: 'https://sgpxqblaylfctuufcwwv.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_KBSh-hWStqfKS_EDxXMtVg_jWiUFI9O',
 };
 
 

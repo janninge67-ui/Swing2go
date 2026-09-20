@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swing2go – begagnade golfbollar</title>
+<meta name="description" content="Swing2go säljer begagnade golfbollar i bra skick. Du handlar som gäst, utan konto.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230b3524'/%3E%3Ccircle cx='50' cy='50' r='30' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+/* =====================  Grund  ===================== */
+:root{
+  --forest:#0b3524;   /* mörkgrön */
+  --fairway:#14573b;
+  --green:#2a9a5c;    /* grön */
+  --leaf:#58c987;     /* ljusgrön accent */
+  --mist:#eef5f0;     /* svag grön nyans som "vit" bakgrund */
+  --line:#d8e6dd;
+  --ink:#0c2b1e;
+  --muted:#59705f;
+  --danger:#a12a2a;
+  --display:'Fraunces', Georgia, 'Times New Roman', serif;
+  --body:'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:#fff;line-height:1.55;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+[hidden]{display:none!important}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.15;letter-spacing:-.015em}
+:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+.wrap{width:min(1140px,100% - 2.5rem);margin-inline:auto}
+.muted{color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:1.5px solid transparent;border-radius:999px;padding:.8rem 1.5rem;font-weight:600;cursor:pointer;text-decoration:none;line-height:1.1;transition:background .15s,border-color .15s}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-sm{padding:.5rem 1rem;font-size:.9rem}
+.btn-primary{background:var(--leaf);color:var(--forest)}
+.btn-primary:hover:not(:disabled){background:#72d79b}
+.btn-dark{background:var(--forest);color:#fff}
+.btn-dark:hover:not(:disabled){background:var(--fairway)}
+.btn-ghost{background:#fff;border-color:var(--line)}
+.btn-ghost:hover:not(:disabled){border-color:var(--green)}
+.btn.danger{color:var(--danger)}
+.wide{width:100%}
+
+.field{display:grid;gap:.3rem}
+.field>span{font-size:.85rem;font-weight:600;color:var(--fairway)}
+input,textarea,select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:.7rem .9rem;background:#fff}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(88,201,135,.3)}
+input[type=checkbox]{width:auto}
+.err{color:var(--danger);font-weight:600;min-height:1.3em}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.empty{color:var(--muted);padding:2rem 0}
+
+/* =====================  Header  ===================== */
+.site-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:1rem}
+.brand{display:flex;align-items:center;gap:.65rem;text-decoration:none}
+.mark{width:40px;height:40px;flex:none;border-radius:50%;background:var(--forest);box-shadow:0 0 0 2px var(--leaf);padding:5px}
+.mark svg{width:100%;height:100%}
+.word{font-family:var(--display);font-weight:700;font-size:1.6rem;letter-spacing:-.03em}
+.word b{color:var(--green);font-weight:700}
+.logo-img{height:44px;width:auto;max-width:220px;object-fit:contain}
+.cartbtn i{font-style:normal;background:var(--leaf);color:var(--forest);min-width:1.5rem;height:1.5rem;border-radius:999px;display:grid;place-items:center;font-size:.8rem;padding:0 .4rem}
+
+/* =====================  Hero  ===================== */
+.hero{position:relative;color:#fff;overflow:hidden;background:repeating-linear-gradient(90deg,#0b3524 0 110px,#0e412c 110px 220px)}
+.hero::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-1px;height:54px;background:#fff;border-radius:50% 50% 0 0/100% 100% 0 0}
+.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:2rem;align-items:center;padding-block:4rem 6rem}
+.hero h1{font-size:clamp(2.8rem,6.2vw,4.8rem);font-weight:600;line-height:1.02;letter-spacing:-.03em}
+.lead{max-width:30rem;color:#cde3d6;font-size:1.15rem;margin:1.3rem 0 2rem}
+.hero-art{width:100%;max-width:540px;justify-self:end}
+.hero-art svg{width:100%;height:auto}
+.hero-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:28px;border:4px solid rgba(255,255,255,.9)}
+
+/* =====================  Produkter  ===================== */
+.section{padding-block:1.5rem 5rem}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap;margin-bottom:1.8rem}
+.section-head h2{font-size:clamp(1.9rem,3.6vw,2.7rem);font-weight:600}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:.45rem 1rem;font-weight:600;font-size:.9rem;cursor:pointer}
+.chip.on{background:var(--forest);border-color:var(--forest);color:#fff}
+.chip i{font-style:normal;opacity:.65;margin-left:.35rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2.4rem 1.6rem}
+.tile{display:flex;flex-direction:column;gap:.7rem}
+.thumb{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;display:grid;place-items:center;background:repeating-linear-gradient(90deg,#e9f3ec 0 30px,#dfece3 30px 60px)}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.ph{width:40%}
+.badge{position:absolute;top:.7rem;left:.7rem;background:var(--forest);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .65rem;border-radius:999px}
+.tile.out .thumb img,.tile.out .thumb .ph{opacity:.5}
+.tile h3{font-size:1.3rem;font-weight:600}
+.desc{color:var(--muted);font-size:.95rem;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.buy{display:flex;justify-content:space-between;align-items:center;gap:.8rem}
+.price{font-family:var(--display);font-weight:600;font-size:1.4rem}
+
+/* =====================  Bag (kundvagn)  ===================== */
+.overlay{position:fixed;inset:0;background:rgba(6,28,19,.55);opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(430px,100%);background:#fff;z-index:50;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 1.4rem;border-bottom:1px solid var(--line)}
+.drawer-head h3{font-size:1.5rem}
+.drawer-body{flex:1;overflow:auto;padding:.4rem 1.4rem}
+.drawer-foot{padding:1.2rem 1.4rem;border-top:1px solid var(--line);display:grid;gap:.9rem}
+.sumrow{display:flex;justify-content:space-between;align-items:baseline;font-size:1.1rem}
+.sumrow b{font-family:var(--display);font-size:1.6rem}
+.line{display:grid;grid-template-columns:64px 1fr auto;gap:.9rem;align-items:center;padding:.9rem 0;border-bottom:1px solid var(--line)}
+.lt{width:64px;height:64px;border-radius:10px;overflow:hidden;background:var(--mist);display:grid;place-items:center}
+.lt img{width:100%;height:100%;object-fit:cover}
+.lt .ph{width:60%}
+.li{display:grid;gap:.1rem}
+.li>span{color:var(--muted);font-size:.9rem}
+.qty{display:inline-flex;align-items:center;gap:.7rem;margin-top:.35rem}
+.qty button{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-weight:700}
+.qty button:hover{border-color:var(--green)}
+.x{border:0;background:none;font-size:1.7rem;line-height:1;cursor:pointer;color:var(--muted);padding:.2rem .5rem}
+
+/* =====================  Kassa  ===================== */
+dialog{border:0;border-radius:22px;padding:0;width:min(780px,calc(100% - 1.5rem));max-height:92vh;overflow:auto;margin:auto;color:var(--ink);box-shadow:0 40px 80px -20px rgba(0,0,0,.5)}
+dialog::backdrop{background:rgba(6,28,19,.6)}
+.co{padding:1.6rem;display:grid;gap:1rem}
+.co-head{display:flex;justify-content:space-between;align-items:center}
+.co-head h2{font-size:1.9rem}
+.co-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:1.6rem}
+.co-fields{display:grid;gap:.8rem}
+.two{display:grid;grid-template-columns:1fr 2fr;gap:.8rem}
+.co-sum{background:var(--mist);border-radius:14px;padding:1.1rem;align-self:start}
+.co-sum h4{font-size:1.15rem;margin-bottom:.5rem}
+.srow{display:flex;justify-content:space-between;gap:1rem;padding:.35rem 0;font-size:.95rem}
+.srow.tot{border-top:1px solid var(--line);margin-top:.4rem;padding-top:.7rem;font-weight:700;font-size:1.05rem}
+.done{padding:2.5rem 2rem;text-align:center;display:grid;gap:.9rem;justify-items:center}
+.done-ball{width:80px}
+.done h2{font-size:2rem;max-width:20ch}
+.done p{max-width:34ch}
+
+/* =====================  Sidfot  ===================== */
+.foot{background:var(--forest);color:#cde3d6;padding:2rem 0}
+.foot-in{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.foot .word{color:#fff}
+.foot .word b{color:var(--leaf)}
+.foot .logo-img{background:#fff;border-radius:10px;padding:.35rem .7rem}
+.foot a.adm{font-size:.85rem;opacity:.7}
+
+.toast{position:fixed;bottom:1.4rem;left:50%;transform:translate(-50%,20px);background:var(--forest);color:#fff;padding:.8rem 1.3rem;border-radius:999px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:100;max-width:calc(100% - 2rem)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.bad{background:var(--danger)}
+
+/* =====================  Admin  ===================== */
+#admin{background:var(--mist);min-height:100vh}
+#admin .site-header{background:#fff}
+.tag{background:var(--forest);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .7rem;border-radius:999px}
+.nav-r{display:flex;gap:.6rem}
+.login{display:grid;place-items:center;min-height:70vh}
+.panel-box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.6rem;display:grid;gap:1rem;align-content:start}
+.login .panel-box{width:min(420px,100%)}
+.login h1{font-size:2rem}
+.tabs{display:flex;gap:.3rem;margin:1.5rem 0 1.2rem;border-bottom:2px solid var(--line);overflow-x:auto}
+.tabs button{border:0;background:none;padding:.8rem 1.2rem;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tabs button.on{color:var(--forest);border-color:var(--green)}
+.tabs i{font-style:normal;background:var(--leaf);color:var(--forest);border-radius:999px;padding:.05rem .55rem;font-size:.78rem;margin-left:.35rem}
+.tabs i:empty{display:none}
+#panel{padding-bottom:4rem}
+
+.order{background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:.7rem}
+.order summary{display:grid;grid-template-columns:auto 1fr auto auto;gap:1rem;align-items:center;padding:1rem 1.2rem;cursor:pointer;list-style:none}
+.order summary::-webkit-details-marker{display:none}
+.ono{font-family:var(--display);font-weight:700;font-size:1.15rem}
+.who small{display:block;color:var(--muted);font-size:.82rem}
+.amt{font-weight:700}
+.pill{border-radius:999px;padding:.25rem .8rem;font-size:.8rem;font-weight:600}
+.s-ny{background:var(--leaf);color:var(--forest)}
+.s-betald{background:#d3eddd;color:var(--fairway)}
+.s-skickad{background:var(--forest);color:#fff}
+.s-avbruten{background:#e6ebe8;color:#66766d}
+.odetail{padding:0 1.2rem 1.2rem;border-top:1px solid var(--line)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding-top:1rem}
+.cols h4{font-size:1.05rem;margin-bottom:.4rem;color:var(--green)}
+.cols p{margin-bottom:.5rem}
+.oi{display:flex;justify-content:space-between;gap:1rem;padding:.25rem 0}
+.oi.tot{border-top:1px solid var(--line);margin-top:.3rem;padding-top:.5rem;font-weight:700}
+.note{background:var(--mist);border-radius:10px;padding:.6rem .8rem;font-style:italic}
+.oact{display:flex;gap:1rem;align-items:center;justify-content:space-between;margin-top:1rem;flex-wrap:wrap}
+.oact label{display:flex;align-items:center;gap:.6rem;font-weight:600}
+.oact select{width:auto}
+
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.full{grid-column:1/-1}
+.pact{display:flex;gap:.7rem}
+.prow{display:grid;grid-template-columns:64px 1fr auto auto auto;gap:1rem;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem 1rem;margin-top:.7rem}
+.prow.off{opacity:.6}
+.pt{width:64px;height:64px;border-radius:10px;overflow:hidden;background:var(--mist);display:grid;place-items:center}
+.pt img{width:100%;height:100%;object-fit:cover}
+.pt .ph{width:60%}
+.pinfo b{display:block}
+.pinfo span{display:block;color:var(--muted);font-size:.9rem}
+.sw{display:flex;align-items:center;gap:.4rem;font-size:.9rem;font-weight:600}
+.look{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.lprev{height:170px;border-radius:10px;background:var(--mist);display:grid;place-items:center;overflow:hidden;color:var(--muted)}
+.lprev img{max-width:100%;max-height:100%;object-fit:contain}
+.lact{display:flex;gap:.6rem;flex-wrap:wrap}
+
+@media (max-width:820px){
+  .hero-grid{grid-template-columns:1fr;padding-block:3rem 5rem}
+  .hero-art{justify-self:center}
+  .co-grid,.cols,.pgrid,.look{grid-template-columns:1fr}
+  .order summary{grid-template-columns:auto 1fr auto}
+  .order summary .pill{grid-column:1/-1;justify-self:start}
+  .prow{grid-template-columns:56px 1fr}
+  .prow>:nth-child(n+3){grid-column:2}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .drawer,.overlay,.toast{transition:none}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Golfbollen (används överallt) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="ballShade" cx="35%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d6e4db"/>
+    </radialGradient>
+    <pattern id="dimples" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <circle cx="4.5" cy="4.5" r="1.5" fill="#0b3524" fill-opacity=".14"/>
+    </pattern>
+    <symbol id="ball" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="47" fill="url(#ballShade)"/>
+      <circle cx="50" cy="50" r="47" fill="url(#dimples)"/>
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#0b3524" stroke-opacity=".2" stroke-width="2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================ BUTIK ============================ -->
+<div id="shop" hidden>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a href="/" class="brand" data-brand aria-label="Swing2go, startsida"><span class="mark"><svg viewBox="0 0 100 100"><use href="#ball"/></svg></span><span class="word">Swing<b>2</b>go</span></a>
+      <button class="btn btn-dark cartbtn" data-act="open-cart" aria-label="Öppna bagen">Bag <i id="cart-count">0</i></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Spela mer,<br>betala mindre.</h1>
+        <p class="lead">Begagnade golfbollar i bra skick. Du handlar som gäst – inget konto och ingen inloggning.</p>
+        <a class="btn btn-primary" href="#butik">Se bollarna</a>
+      </div>
+
+      <!-- Bollen flyger från tee till hålet. Byts mot din egen bild om du laddar upp en i admin. -->
+      <div class="hero-art" id="hero-art">
+        <svg viewBox="0 0 480 420" role="img" aria-label="En golfboll flyger från tee mot ett hål med flagga">
+          <defs><clipPath id="gclip"><ellipse cx="240" cy="335" rx="228" ry="72"/></clipPath></defs>
+          <g clip-path="url(#gclip)">
+            <rect x="0" y="250" width="480" height="170" fill="#2a9a5c"/>
+            <g fill="#33a864">
+              <rect x="0" y="250" width="48" height="170"/><rect x="96" y="250" width="48" height="170"/>
+              <rect x="192" y="250" width="48" height="170"/><rect x="288" y="250" width="48" height="170"/>
+              <rect x="384" y="250" width="48" height="170"/>
+            </g>
+          </g>
+          <ellipse cx="240" cy="335" rx="228" ry="72" fill="none" stroke="#58c987" stroke-opacity=".55" stroke-width="2"/>
+          <ellipse cx="352" cy="336" rx="17" ry="6" fill="#06281a"/>
+          <rect x="350.5" y="120" width="3" height="216" rx="1.5" fill="#fff"/>
+          <path d="M353.5 122 L412 146 L353.5 170 Z" fill="#fff"/>
+          <path d="M98 318 h12 l-3 22 h-6 z" fill="#fff"/>
+          <path d="M104 300 C 160 70, 300 70, 326 324" fill="none" stroke="#58c987" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 12"/>
+          <g transform="translate(104 300)">
+            <g>
+              <animateMotion dur="1.8s" begin="0.5s" fill="freeze" path="M0 0 C 56 -230, 196 -230, 222 24" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".25 .1 .25 1"/>
+              <use href="#ball" x="-18" y="-18" width="36" height="36"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <main id="butik" class="wrap section">
+    <div class="section-head">
+      <h2>Bollar</h2>
+      <div class="chips" id="filters"></div>
+    </div>
+    <div class="grid" id="grid"><p class="empty">Laddar bollar…</p></div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <a href="/" class="brand" data-brand aria-label="Swing2go, startsida"><span class="mark"><svg viewBox="0 0 100 100"><use href="#ball"/></svg></span><span class="word">Swing<b>2</b>go</span></a>
+      <p>Begagnade golfbollar. © <span id="yr"></span> Swing2go</p>
+      <a class="adm" href="/admin">Admin</a>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay" data-act="close-cart"></div>
+  <aside class="drawer" id="drawer" aria-label="Din bag">
+    <div class="drawer-head"><h3>Din bag</h3><button class="x" data-act="close-cart" aria-label="Stäng bagen">×</button></div>
+    <div class="drawer-body" id="cart-items"></div>
+    <div class="drawer-foot">
+      <div class="sumrow"><span>Totalt</span><b id="cart-total">0 kr</b></div>
+      <button class="btn btn-primary wide" id="to-checkout" data-act="checkout">Till kassan</button>
+    </div>
+  </aside>
+
+  <dialog id="checkout">
+    <form id="co-form" class="co">
+      <div class="co-head"><h2>Kassa</h2><button type="button" class="x" data-act="close-dialog" aria-label="Stäng">×</button></div>
+      <p class="muted">Du handlar som gäst. Vi behöver bara dina leveransuppgifter.</p>
+      <div class="co-grid">
+        <div class="co-fields">
+          <label class="field"><span>Namn</span><input name="name" required maxlength="100" autocomplete="name"></label>
+          <label class="field"><span>E-post</span><input name="email" type="email" required maxlength="150" autocomplete="email"></label>
+          <label class="field"><span>Telefon (valfritt)</span><input name="phone" type="tel" maxlength="30" autocomplete="tel"></label>
+          <label class="field"><span>Adress</span><input name="address" required maxlength="150" autocomplete="street-address"></label>
+          <div class="two">
+            <label class="field"><span>Postnummer</span><input name="zip" required maxlength="12" autocomplete="postal-code" inputmode="numeric"></label>
+            <label class="field"><span>Ort</span><input name="city" required maxlength="80" autocomplete="address-level2"></label>
+          </div>
+          <label class="field"><span>Meddelande (valfritt)</span><textarea name="note" rows="2" maxlength="500"></textarea></label>
+          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        </div>
+        <div class="co-sum"><h4>Din beställning</h4><div id="sum"></div></div>
+      </div>
+      <p class="err" id="co-err" role="alert"></p>
+      <button class="btn btn-primary wide" id="place" type="submit">Lägg beställning</button>
+    </form>
+  </dialog>
+
+  <dialog id="done">
+    <div class="done">
+      <svg class="done-ball" viewBox="0 0 100 100" aria-hidden="true"><use href="#ball"/></svg>
+      <h2>Snyggt slag, din beställning är lagd</h2>
+      <p>Ordernummer <b id="done-no"></b>. Vi kontaktar dig på <b id="done-mail"></b> med betalning och leveransinformation.</p>
+      <button class="btn btn-dark" data-act="close-dialog">Fortsätt handla</button>
+    </div>
+  </dialog>
+</div>
+
+<!-- ============================ ADMIN ============================ -->
+<div id="admin" hidden>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a href="/admin" class="brand" data-brand aria-label="Swing2go admin"><span class="mark"><svg viewBox="0 0 100 100"><use href="#ball"/></svg></span><span class="word">Swing<b>2</b>go</span><span class="tag">Admin</span></a>
+      <div class="nav-r">
+        <a class="btn btn-ghost btn-sm" href="/">Visa butiken</a>
+        <button class="btn btn-dark btn-sm" data-act="logout" id="logout" hidden>Logga ut</button>
+      </div>
+    </div>
+  </header>
+
+  <section id="login" class="wrap login" hidden>
+    <form id="login-form" class="panel-box">
+      <h1>Logga in</h1>
+      <p class="muted">Endast för butiksägaren.</p>
+      <label class="field"><span>E-post</span><input type="email" name="email" required autocomplete="username"></label>
+      <label class="field"><span>Lösenord</span><input type="password" name="password" required autocomplete="current-password"></label>
+      <p class="err" id="login-err" role="alert"></p>
+      <button class="btn btn-dark wide">Logga in</button>
+    </form>
+  </section>
+
+  <section id="panel" class="wrap" hidden>
+    <nav class="tabs">
+      <button class="on" data-act="tab" data-v="orders">Ordrar <i id="new-count"></i></button>
+      <button data-act="tab" data-v="products">Produkter</button>
+      <button data-act="tab" data-v="look">Logga och bilder</button>
+    </nav>
+
+    <div id="t-orders">
+      <div class="chips" id="ord-filters"></div>
+      <div id="orders-list"></div>
+    </div>
+
+    <div id="t-products" hidden>
+      <form id="p-form" class="panel-box">
+        <h3 id="p-title">Lägg till produkt</h3>
+        <div class="pgrid">
+          <label class="field"><span>Namn</span><input name="name" required maxlength="120"></label>
+          <label class="field"><span>Kategori</span><input name="category" list="cats" placeholder="Golfbollar" maxlength="60"><datalist id="cats"></datalist></label>
+          <label class="field"><span>Pris (kr)</span><input name="price" type="number" min="0" step="1" required></label>
+          <label class="field"><span>Antal i lager</span><input name="stock" type="number" min="0" step="1" required value="1"></label>
+          <label class="field full"><span>Beskrivning</span><textarea name="description" rows="3" maxlength="600"></textarea></label>
+          <label class="field full"><span>Bild <em id="p-imghint" class="muted"></em></span><input name="img" type="file" accept="image/*"></label>
+        </div>
+        <div class="pact">
+          <button class="btn btn-dark" id="p-save">Spara produkt</button>
+          <button type="button" class="btn btn-ghost" id="p-cancel" data-act="p-cancel" hidden>Avbryt redigering</button>
+        </div>
+      </form>
+      <div id="p-list"></div>
+    </div>
+
+    <div id="t-look" class="look" hidden></div>
+  </section>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- Hjälpare ---------- */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const kr = n => new Intl.NumberFormat('sv-SE').format(n) + ' kr';
+const ballSvg = cls => `<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><use href="#ball"/></svg>`;
+const thumb = p => p.image_url ? `<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy">` : ballSvg('ph');
+const run = fn => Promise.resolve().then(fn).catch(e => { console.error(e); toast(e.message || 'Något gick fel.', 'bad'); });
+
+let toastTimer;
+function toast(msg, type = '') {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => (t.className = 'toast'), 2800);
+}
+
+let sb, settings = {};
+const click = {};    // data-act="..."     -> funktion
+const change = {};   // data-change="..."  -> funktion
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (el && click[el.dataset.act]) run(() => click[el.dataset.act](el, e));
+});
+document.addEventListener('change', e => {
+  const el = e.target.closest('[data-change]');
+  if (el && change[el.dataset.change]) run(() => change[el.dataset.change](el, e));
+});
+
+/* ---------- Start ---------- */
+async function init() {
+  try {
+    const cfg = await (await fetch('/api/config')).json();
+    if (!cfg.supabaseUrl || !cfg.anonKey || cfg.supabaseUrl.includes('DITT-PROJEKT')) throw new Error('config');
+    sb = supabase.createClient(cfg.supabaseUrl, cfg.anonKey);
+  } catch {
+    document.body.innerHTML = '<p style="padding:2rem;font-family:sans-serif">Sidan är inte färdigkonfigurerad ännu. Supabase-uppgifterna saknas i wrangler.jsonc.</p>';
+    return;
+  }
+  const { data } = await sb.from('settings').select('*');
+  settings = Object.fromEntries((data || []).map(r => [r.key, r.value]));
+  applyBrand();
+  location.pathname.startsWith('/admin') ? adminInit() : shopInit();
+}
+
+function applyBrand() {
+  if (settings.logo_url) {
+    $$('[data-brand]').forEach(el => {
+      const tag = $('.tag', el);
+      el.innerHTML = `<img class="logo-img" src="${esc(settings.logo_url)}" alt="Swing2go">` + (tag ? tag.outerHTML : '');
+    });
+  }
+  if (settings.hero_url) $('#hero-art').innerHTML = `<img class="hero-img" src="${esc(settings.hero_url)}" alt="">`;
+}
+
+/* =====================================================================
+   BUTIK
+   ===================================================================== */
+let products = [], loaded = false, activeCat = 'Alla';
+let cart = {};
+try { cart = JSON.parse(localStorage.getItem('s2g-cart') || '{}'); } catch {}
+const saveCart = () => { try { localStorage.setItem('s2g-cart', JSON.stringify(cart)); } catch {} };
+
+async function shopInit() {
+  $('#shop').hidden = false;
+  $('#yr').textContent = new Date().getFullYear();
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const svg = $('#hero-art svg');
+    if (svg) { svg.pauseAnimations?.(); svg.setCurrentTime?.(10); }   // bollen visas direkt vid hålet
+  }
+  await loadProducts();
+  renderProducts();
+  renderCart();
+}
+
+async function loadProducts() {
+  const { data, error } = await sb.from('products').select('*').eq('active', true).order('created_at', { ascending: false });
+  if (error) { $('#grid').innerHTML = '<p class="empty">Kunde inte hämta produkterna. Ladda om sidan.</p>'; return; }
+  products = data; loaded = true;
+}
+
+function renderProducts() {
+  const cats = ['Alla', ...new Set(products.map(p => p.category).filter(Boolean))];
+  $('#filters').innerHTML = cats.length > 2
+    ? cats.map(c => `<button class="chip ${c === activeCat ? 'on' : ''}" data-act="cat" data-v="${esc(c)}">${esc(c)}</button>`).join('')
+    : '';
+  const list = products.filter(p => activeCat === 'Alla' || p.category === activeCat);
+  $('#grid').innerHTML = list.length ? list.map(tile).join('') : '<p class="empty">Inga bollar i lager just nu. Kom tillbaka snart.</p>';
+}
+
+function tile(p) {
+  const out = p.stock <= 0;
+  const badge = out ? 'Slut i lager' : p.stock <= 5 ? `Endast ${p.stock} kvar` : '';
+  return `<article class="tile ${out ? 'out' : ''}">
+    <div class="thumb">${thumb(p)}${badge ? `<span class="badge">${badge}</span>` : ''}</div>
+    <h3>${esc(p.name)}</h3>
+    <p class="desc">${esc(p.description)}</p>
+    <div class="buy">
+      <span class="price">${kr(p.price_sek)}</span>
+      <button class="btn btn-dark btn-sm" data-act="add" data-id="${p.id}" ${out ? 'disabled' : ''}>${out ? 'Slut' : 'Lägg i bagen'}</button>
+    </div>
+  </article>`;
+}
+
+const cartLines = () => Object.entries(cart).map(([id, qty]) => ({ p: products.find(x => x.id === id), qty })).filter(l => l.p);
+const cartTotal = () => cartLines().reduce((s, l) => s + l.p.price_sek * l.qty, 0);
+
+function renderCart() {
+  if (loaded) {
+    for (const [id, qty] of Object.entries(cart)) {       // städa bort sålda/borttagna produkter
+      const p = products.find(x => x.id === id);
+      if (!p || p.stock <= 0) delete cart[id];
+      else if (qty > p.stock) cart[id] = p.stock;
+    }
+    saveCart();
+  }
+  const lines = cartLines();
+  $('#cart-count').textContent = lines.reduce((n, l) => n + l.qty, 0);
+  $('#cart-items').innerHTML = lines.length ? lines.map(l => `
+    <div class="line">
+      <div class="lt">${thumb(l.p)}</div>
+      <div class="li">
+        <b>${esc(l.p.name)}</b><span>${kr(l.p.price_sek)}</span>
+        <div class="qty">
+          <button data-act="dec" data-id="${l.p.id}" aria-label="Minska antal">−</button>
+          <span>${l.qty}</span>
+          <button data-act="inc" data-id="${l.p.id}" aria-label="Öka antal">+</button>
+        </div>
+      </div>
+      <button class="x" data-act="rm" data-id="${l.p.id}" aria-label="Ta bort ${esc(l.p.name)}">×</button>
+    </div>`).join('') : '<p class="empty">Bagen är tom. Lägg i några bollar.</p>';
+  $('#cart-total').textContent = kr(cartTotal());
+  $('#to-checkout').disabled = !lines.length;
+}
+
+function toggleCart(open) {
+  $('#drawer').classList.toggle('open', open);
+  $('#overlay').classList.toggle('open', open);
+}
+
+click['open-cart']  = () => toggleCart(true);
+click['close-cart'] = () => toggleCart(false);
+click.cat = el => { activeCat = el.dataset.v; renderProducts(); };
+click.add = el => {
+  const p = products.find(x => x.id === el.dataset.id);
+  if (!p) return;
+  const now = cart[p.id] || 0;
+  if (now >= p.stock) return toast(`Det finns bara ${p.stock} kvar av ${p.name}.`, 'bad');
+  cart[p.id] = now + 1; saveCart(); renderCart();
+  toast('Lades i bagen');
+};
+click.inc = el => {
+  const p = products.find(x => x.id === el.dataset.id);
+  if (p && cart[p.id] < p.stock) { cart[p.id]++; saveCart(); renderCart(); }
+  else toast('Fler finns inte i lager.', 'bad');
+};
+click.dec = el => {
+  const id = el.dataset.id;
+  cart[id] = (cart[id] || 1) - 1;
+  if (cart[id] <= 0) delete cart[id];
+  saveCart(); renderCart();
+};
+click.rm = el => { delete cart[el.dataset.id]; saveCart(); renderCart(); };
+click['close-dialog'] = el => el.closest('dialog').close();
+click.checkout = () => {
+  const lines = cartLines();
+  if (!lines.length) return;
+  $('#sum').innerHTML = lines.map(l => `<div class="srow"><span>${l.qty} × ${esc(l.p.name)}</span><span>${kr(l.p.price_sek * l.qty)}</span></div>`).join('')
+    + `<div class="srow tot"><span>Totalt</span><span>${kr(cartTotal())}</span></div>`;
+  $('#co-err').textContent = '';
+  toggleCart(false);
+  $('#checkout').showModal();
+};
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleCart(false); });
+
+$('#co-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target, btn = $('#place'), err = $('#co-err');
+  err.textContent = '';
+  const body = Object.fromEntries(new FormData(form));
+  body.items = Object.entries(cart).map(([id, qty]) => ({ id, qty }));
+  btn.disabled = true; btn.textContent = 'Skickar…';
+  try {
+    const res = await fetch('/api/order', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out.error || 'Något gick fel. Försök igen.');
+    cart = {}; saveCart(); form.reset();
+    $('#checkout').close();
+    $('#done-no').textContent = '#' + out.order_no;
+    $('#done-mail').textContent = body.email;
+    $('#done').showModal();
+  } catch (x) {
+    err.textContent = x.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Lägg beställning';
+    await loadProducts(); renderProducts(); renderCart();   // uppdatera lagersaldo
+  }
+});
+
+/* =====================================================================
+   ADMIN
+   ===================================================================== */
+const STATUS = { ny: 'Ny', betald: 'Betald', skickad: 'Skickad', avbruten: 'Avbruten' };
+let orders = [], adminProducts = [], ordFilter = 'alla', editing = null;
+
+async function adminInit() {
+  $('#admin').hidden = false;
+  const { data } = await sb.auth.getSession();
+  data.session ? enterAdmin() : ($('#login').hidden = false);
+}
+
+function enterAdmin() {
+  $('#login').hidden = true; $('#panel').hidden = false; $('#logout').hidden = false;
+  tab('orders');
+}
+
+$('#login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const { email, password } = Object.fromEntries(new FormData(e.target));
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { $('#login-err').textContent = 'Fel e-post eller lösenord.'; return; }
+  $('#login-err').textContent = '';
+  enterAdmin();
+});
+
+click.logout = async () => { await sb.auth.signOut(); location.reload(); };
+click.tab = el => tab(el.dataset.v);
+
+function tab(name) {
+  $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === name));
+  ['orders', 'products', 'look'].forEach(t => ($('#t-' + t).hidden = t !== name));
+  if (name === 'orders') loadOrders();
+  if (name === 'products') loadAdminProducts();
+  if (name === 'look') renderLook();
+}
+
+/* ----- Ordrar ----- */
+async function loadOrders() {
+  const { data, error } = await sb.from('orders').select('*, order_items(*)').order('created_at', { ascending: false });
+  if (error) return toast('Kunde inte hämta ordrar.', 'bad');
+  orders = data;
+  renderOrderFilters(); renderOrders();
+}
+
+function renderOrderFilters() {
+  const count = s => s === 'alla' ? orders.length : orders.filter(o => o.status === s).length;
+  $('#ord-filters').innerHTML = ['alla', ...Object.keys(STATUS)].map(s =>
+    `<button class="chip ${s === ordFilter ? 'on' : ''}" data-act="ord-filter" data-v="${s}">${s === 'alla' ? 'Alla' : STATUS[s]}<i>${count(s)}</i></button>`).join('');
+  const n = count('ny');
+  $('#new-count').textContent = n || '';
+}
+
+function renderOrders() {
+  const list = orders.filter(o => ordFilter === 'alla' || o.status === ordFilter);
+  $('#orders-list').innerHTML = list.length ? list.map(orderRow).join('') : '<p class="empty">Inga ordrar här ännu.</p>';
+}
+
+function orderRow(o) {
+  const date = new Date(o.created_at).toLocaleString('sv-SE', { dateStyle: 'medium', timeStyle: 'short' });
+  const items = (o.order_items || []).map(i => `<div class="oi"><span>${i.qty} × ${esc(i.product_name)}</span><span>${kr(i.price_sek * i.qty)}</span></div>`).join('');
+  return `<details class="order">
+    <summary>
+      <span class="ono">#${o.order_no}</span>
+      <span class="who">${esc(o.name)}<small>${date}</small></span>
+      <span class="amt">${kr(o.total_sek)}</span>
+      <span class="pill s-${o.status}">${STATUS[o.status]}</span>
+    </summary>
+    <div class="odetail">
+      <div class="cols">
+        <div>
+          <h4>Kund</h4>
+          <p>${esc(o.name)}<br>${esc(o.address)}<br>${esc(o.zip)} ${esc(o.city)}</p>
+          <p><a href="mailto:${esc(o.email)}">${esc(o.email)}</a>${o.phone ? '<br>' + esc(o.phone) : ''}</p>
+          ${o.note ? `<p class="note">${esc(o.note)}</p>` : ''}
+        </div>
+        <div>
+          <h4>Varor</h4>
+          ${items}
+          <div class="oi tot"><span>Totalt</span><span>${kr(o.total_sek)}</span></div>
+        </div>
+      </div>
+      <div class="oact">
+        <label>Status
+          <select data-change="ord-status" data-id="${o.id}">
+            ${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === o.status ? 'selected' : ''}>${v}</option>`).join('')}
+          </select>
+        </label>
+        <button class="btn btn-ghost btn-sm danger" data-act="ord-del" data-id="${o.id}">Ta bort order</button>
+      </div>
+    </div>
+  </details>`;
+}
+
+click['ord-filter'] = el => { ordFilter = el.dataset.v; renderOrderFilters(); renderOrders(); };
+
+change['ord-status'] = async el => {
+  const o = orders.find(x => x.id === el.dataset.id);
+  const { error } = await sb.from('orders').update({ status: el.value }).eq('id', o.id);
+  if (error) { el.value = o.status; throw new Error('Kunde inte ändra status.'); }
+  o.status = el.value;
+  const pill = $('.pill', el.closest('details'));
+  pill.className = 'pill s-' + o.status; pill.textContent = STATUS[o.status];
+  renderOrderFilters();
+  toast('Status ändrad');
+};
+
+click['ord-del'] = async el => {
+  if (!confirm('Ta bort ordern permanent? Lagersaldot ändras inte.')) return;
+  const { error } = await sb.from('orders').delete().eq('id', el.dataset.id);
+  if (error) throw new Error('Kunde inte ta bort ordern.');
+  orders = orders.filter(o => o.id !== el.dataset.id);
+  renderOrderFilters(); renderOrders();
+  toast('Ordern togs bort');
+};
+
+/* ----- Produkter ----- */
+async function loadAdminProducts() {
+  const { data, error } = await sb.from('products').select('*').order('created_at', { ascending: false });
+  if (error) return toast('Kunde inte hämta produkter.', 'bad');
+  adminProducts = data;
+  $('#cats').innerHTML = [...new Set(data.map(p => p.category).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join('');
+  renderAdminProducts();
+}
+
+function renderAdminProducts() {
+  $('#p-list').innerHTML = adminProducts.length ? adminProducts.map(p => `
+    <div class="prow ${p.active ? '' : 'off'}">
+      <div class="pt">${thumb(p)}</div>
+      <div class="pinfo"><b>${esc(p.name)}</b><span>${esc(p.category || '')}</span><span>${kr(p.price_sek)}, ${p.stock} i lager</span></div>
+      <label class="sw"><input type="checkbox" data-change="p-active" data-id="${p.id}" ${p.active ? 'checked' : ''}> Synlig</label>
+      <button class="btn btn-ghost btn-sm" data-act="p-edit" data-id="${p.id}">Redigera</button>
+      <button class="btn btn-ghost btn-sm danger" data-act="p-del" data-id="${p.id}">Ta bort</button>
+    </div>`).join('') : '<p class="empty">Inga produkter än. Lägg till din första ovan.</p>';
+}
+
+async function upload(file, folder) {
+  if (!file.type.startsWith('image/')) throw new Error('Välj en bildfil.');
+  if (file.size > 5 * 1024 * 1024) throw new Error('Bilden är för stor (max 5 MB).');
+  const ext = (file.name.split('.').pop() || 'png').toLowerCase().replace(/[^a-z0-9]/g, '') || 'png';
+  const path = `${folder}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await sb.storage.from('media').upload(path, file, { contentType: file.type, cacheControl: '31536000' });
+  if (error) throw new Error('Uppladdningen misslyckades: ' + error.message);
+  return sb.storage.from('media').getPublicUrl(path).data.publicUrl;
+}
+
+function resetForm() {
+  $('#p-form').reset();
+  editing = null;
+  $('#p-title').textContent = 'Lägg till produkt';
+  $('#p-imghint').textContent = '';
+  $('#p-cancel').hidden = true;
+}
+
+$('#p-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target, btn = $('#p-save');
+  const d = Object.fromEntries(new FormData(form));
+  const file = form.elements.namedItem('img').files[0];
+  const row = {
+    name: d.name.trim(),
+    description: d.description.trim(),
+    price_sek: parseInt(d.price, 10),
+    stock: parseInt(d.stock, 10),
+    category: d.category.trim() || 'Golfbollar',
+  };
+  if (!row.name || Number.isNaN(row.price_sek) || Number.isNaN(row.stock) || row.price_sek < 0 || row.stock < 0) {
+    return toast('Kontrollera namn, pris och lager.', 'bad');
+  }
+  btn.disabled = true;
+  try {
+    if (file) row.image_url = await upload(file, 'products');
+    const { error } = editing
+      ? await sb.from('products').update(row).eq('id', editing)
+      : await sb.from('products').insert(row);
+    if (error) throw new Error('Kunde inte spara: ' + error.message);
+    toast(editing ? 'Produkten sparades' : 'Produkten lades till');
+    resetForm();
+    await loadAdminProducts();
+  } catch (x) {
+    toast(x.message, 'bad');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+click['p-edit'] = el => {
+  const p = adminProducts.find(x => x.id === el.dataset.id);
+  const f = $('#p-form');
+  const vals = { name: p.name, category: p.category || '', price: p.price_sek, stock: p.stock, description: p.description || '' };
+  for (const [k, v] of Object.entries(vals)) f.elements.namedItem(k).value = v;
+  f.elements.namedItem('img').value = '';
+  editing = p.id;
+  $('#p-title').textContent = 'Redigera produkt';
+  $('#p-imghint').textContent = p.image_url ? '(lämna tomt för att behålla nuvarande bild)' : '';
+  $('#p-cancel').hidden = false;
+  f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+click['p-cancel'] = resetForm;
+
+click['p-del'] = async el => {
+  const p = adminProducts.find(x => x.id === el.dataset.id);
+  if (!confirm(`Ta bort "${p.name}"? Det går inte att ångra. Gamla ordrar behåller sina rader.`)) return;
+  const { error } = await sb.from('products').delete().eq('id', p.id);
+  if (error) throw new Error('Kunde inte ta bort produkten.');
+  if (editing === p.id) resetForm();
+  toast('Produkten togs bort');
+  await loadAdminProducts();
+};
+
+change['p-active'] = async el => {
+  const { error } = await sb.from('products').update({ active: el.checked }).eq('id', el.dataset.id);
+  if (error) { el.checked = !el.checked; throw new Error('Kunde inte ändra synlighet.'); }
+  toast(el.checked ? 'Produkten är synlig i butiken' : 'Produkten är dold');
+  await loadAdminProducts();
+};
+
+/* ----- Logga och bilder ----- */
+const LOOK = [
+  ['logo_url', 'Logotyp', 'Visas i toppen och i sidfoten. PNG eller SVG med genomskinlig bakgrund fungerar bäst.'],
+  ['hero_url', 'Bild på startsidan', 'Ersätter golfboll-illustrationen överst. Kvadratisk bild, minst 800 pixlar bred.'],
+];
+
+function renderLook() {
+  $('#t-look').innerHTML = LOOK.map(([key, title, help]) => `
+    <div class="panel-box">
+      <h3>${title}</h3>
+      <p class="muted">${help}</p>
+      <div class="lprev">${settings[key] ? `<img src="${esc(settings[key])}" alt="">` : '<span>Ingen bild vald</span>'}</div>
+      <div class="lact">
+        <label class="btn btn-dark btn-sm">Välj bild<input type="file" accept="image/*" hidden data-change="set-img" data-key="${key}"></label>
+        ${settings[key] ? `<button class="btn btn-ghost btn-sm danger" data-act="clear-img" data-key="${key}">Ta bort</button>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+async function saveSetting(key, value) {
+  const { error } = await sb.from('settings').upsert({ key, value });
+  if (error) throw new Error('Kunde inte spara: ' + error.message);
+  settings[key] = value;
+}
+
+change['set-img'] = async el => {
+  const file = el.files[0];
+  if (!file) return;
+  toast('Laddar upp…');
+  const url = await upload(file, 'site');
+  await saveSetting(el.dataset.key, url);
+  el.value = '';
+  applyBrand(); renderLook();
+  toast('Bilden sparades');
+};
+
+click['clear-img'] = async el => {
+  await saveSetting(el.dataset.key, '');
+  renderLook();
+  toast(el.dataset.key === 'logo_url' ? 'Logotypen togs bort. Ladda om sidan för att se standardlogotypen.' : 'Bilden togs bort');
+};
+
+init();
+})();
+</script>
+</body>
+</html>

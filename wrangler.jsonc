@@ -1,0 +1,15 @@
+{
+  "name": "swing2go",
+  "main": "worker.js",
+  "compatibility_date": "2025-09-01",
+
+  // Dessa två är publika och får ligga i GitHub.
+  // Hittas i Supabase: Project Settings -> API.
+  "vars": {
+    "SUPABASE_URL": "https://sgpxqblaylfctuufcwwv.supabase.co",
+    "SUPABASE_ANON_KEY": "sb_publishable_KBSh-hWStqfKS_EDxXMtVg_jWiUFI9O"
+  }
+
+  // OBS: SUPABASE_SERVICE_KEY läggs INTE här.
+  // Lägg den som Secret i Cloudflare (Settings -> Variables and Secrets).
+}

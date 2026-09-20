@@ -6,6 +6,9 @@
 <title>Swing2go – begagnade golfbollar</title>
 <meta name="description" content="Swing2go säljer begagnade golfbollar i bra skick. Du handlar som gäst, utan konto.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230b3524'/%3E%3Ccircle cx='50' cy='50' r='30' fill='white'/%3E%3C/svg%3E">
+<script>
+try{var t=JSON.parse(localStorage.getItem('s2g-theme'));if(t){var r=document.documentElement.style;r.setProperty('--forest',t.dark);r.setProperty('--green',t.green);r.setProperty('--leaf',t.leaf);if(t.family)r.setProperty('--display',t.family);if(t.url&&t.url.indexOf('https://fonts.googleapis.com/')===0){var l=document.createElement('link');l.rel='stylesheet';l.href=t.url;document.head.appendChild(l)}}}catch(e){}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,14 +17,29 @@
 <style>
 /* =====================  Grund  ===================== */
 :root{
-  --forest:#0b3524;   /* mörkgrön */
-  --fairway:#14573b;
-  --green:#2a9a5c;    /* grön */
-  --leaf:#58c987;     /* ljusgrön accent */
-  --mist:#eef5f0;     /* svag grön nyans som "vit" bakgrund */
-  --line:#d8e6dd;
-  --ink:#0c2b1e;
-  --muted:#59705f;
+  /* Tre basfärger som kan ändras i admin (Utseende) */
+  --forest:#0b3524;   /* mörk */
+  --green:#2a9a5c;    /* huvudfärg */
+  --leaf:#58c987;     /* ljus accent */
+  /* Allt annat räknas ut från de tre */
+  --fairway:color-mix(in srgb,var(--forest) 66%,var(--green));
+  --mist:color-mix(in srgb,var(--green) 9%,#fff);
+  --tint:color-mix(in srgb,var(--green) 14%,#fff);
+  --line:color-mix(in srgb,var(--green) 22%,#fff);
+  --ink:color-mix(in srgb,var(--forest) 82%,#000);
+  --muted:color-mix(in srgb,var(--forest) 68%,#fff);
+  --sky-1:color-mix(in srgb,var(--forest) 74%,#000);
+  --sky-2:color-mix(in srgb,var(--forest) 80%,var(--green));
+  --sky-3:color-mix(in srgb,var(--forest) 30%,var(--green));
+  --hill-1:color-mix(in srgb,var(--forest) 72%,var(--green));
+  --hill-2:color-mix(in srgb,var(--forest) 50%,var(--green));
+  --tree-line:color-mix(in srgb,var(--forest) 82%,var(--green));
+  --tree-hi:color-mix(in srgb,var(--forest) 65%,var(--green));
+  --trunk:color-mix(in srgb,var(--forest) 80%,#000);
+  --mow-2:color-mix(in srgb,var(--green) 77%,var(--leaf));
+  --gr-1:color-mix(in srgb,var(--green) 60%,var(--leaf));
+  --gr-2:color-mix(in srgb,var(--green) 32%,var(--leaf));
+  --glow:color-mix(in srgb,var(--leaf) 16%,#fff);
   --danger:#a12a2a;
   --display:'Fraunces', Georgia, 'Times New Roman', serif;
   --body:'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -42,7 +60,7 @@ h1,h2,h3,h4{font-family:var(--display);line-height:1.15;letter-spacing:-.015em}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .btn-sm{padding:.5rem 1rem;font-size:.9rem}
 .btn-primary{background:var(--leaf);color:var(--forest)}
-.btn-primary:hover:not(:disabled){background:#72d79b}
+.btn-primary:hover:not(:disabled){background:color-mix(in srgb,var(--leaf) 78%,#fff)}
 .btn-dark{background:var(--forest);color:#fff}
 .btn-dark:hover:not(:disabled){background:var(--fairway)}
 .btn-ghost{background:#fff;border-color:var(--line)}
@@ -70,15 +88,16 @@ input[type=checkbox]{width:auto}
 .logo-img{height:44px;width:auto;max-width:220px;object-fit:contain}
 .cartbtn i{font-style:normal;background:var(--leaf);color:var(--forest);min-width:1.5rem;height:1.5rem;border-radius:999px;display:grid;place-items:center;font-size:.8rem;padding:0 .4rem}
 
-/* =====================  Hero  ===================== */
-.hero{position:relative;color:#fff;overflow:hidden;background:repeating-linear-gradient(90deg,#0b3524 0 110px,#0e412c 110px 220px)}
-.hero::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-1px;height:54px;background:#fff;border-radius:50% 50% 0 0/100% 100% 0 0}
-.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:2rem;align-items:center;padding-block:4rem 6rem}
+/* =====================  Hero (golfbana i bakgrunden)  ===================== */
+.hero{position:relative;color:#fff;overflow:hidden;background:var(--sky-1);min-height:clamp(540px,78vh,700px);display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0}
+.hero-bg svg,.hero-bg img{width:100%;height:100%}
+.hero-bg img{object-fit:cover}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,color-mix(in srgb,var(--sky-1) 90%,transparent) 0%,color-mix(in srgb,var(--sky-1) 62%,transparent) 36%,transparent 68%)}
+.hero::after{content:"";position:absolute;z-index:3;left:-10%;right:-10%;bottom:-1px;height:54px;background:#fff;border-radius:50% 50% 0 0/100% 100% 0 0}
+.hero-grid{position:relative;z-index:2;padding-block:4rem 7rem}
 .hero h1{font-size:clamp(2.8rem,6.2vw,4.8rem);font-weight:600;line-height:1.02;letter-spacing:-.03em}
-.lead{max-width:30rem;color:#cde3d6;font-size:1.15rem;margin:1.3rem 0 2rem}
-.hero-art{width:100%;max-width:540px;justify-self:end}
-.hero-art svg{width:100%;height:auto}
-.hero-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:28px;border:4px solid rgba(255,255,255,.9)}
+.lead{max-width:30rem;color:#d6eadd;font-size:1.15rem;margin:1.3rem 0 2rem}
 
 /* =====================  Produkter  ===================== */
 .section{padding-block:1.5rem 5rem}
@@ -90,7 +109,7 @@ input[type=checkbox]{width:auto}
 .chip i{font-style:normal;opacity:.65;margin-left:.35rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2.4rem 1.6rem}
 .tile{display:flex;flex-direction:column;gap:.7rem}
-.thumb{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;display:grid;place-items:center;background:repeating-linear-gradient(90deg,#e9f3ec 0 30px,#dfece3 30px 60px)}
+.thumb{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;display:grid;place-items:center;background:repeating-linear-gradient(90deg,var(--mist) 0 30px,var(--tint) 30px 60px)}
 .thumb img{width:100%;height:100%;object-fit:cover}
 .ph{width:40%}
 .badge{position:absolute;top:.7rem;left:.7rem;background:var(--forest);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .65rem;border-radius:999px}
@@ -141,7 +160,7 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
 .done p{max-width:34ch}
 
 /* =====================  Sidfot  ===================== */
-.foot{background:var(--forest);color:#cde3d6;padding:2rem 0}
+.foot{background:var(--forest);color:color-mix(in srgb,#fff 80%,var(--forest));padding:2rem 0}
 .foot-in{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .foot .word{color:#fff}
 .foot .word b{color:var(--leaf)}
@@ -176,7 +195,7 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
 .amt{font-weight:700}
 .pill{border-radius:999px;padding:.25rem .8rem;font-size:.8rem;font-weight:600}
 .s-ny{background:var(--leaf);color:var(--forest)}
-.s-betald{background:#d3eddd;color:var(--fairway)}
+.s-betald{background:color-mix(in srgb,var(--green) 22%,#fff);color:var(--fairway)}
 .s-skickad{background:var(--forest);color:#fff}
 .s-avbruten{background:#e6ebe8;color:#66766d}
 .odetail{padding:0 1.2rem 1.2rem;border-top:1px solid var(--line)}
@@ -201,15 +220,45 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
 .pinfo b{display:block}
 .pinfo span{display:block;color:var(--muted);font-size:.9rem}
 .sw{display:flex;align-items:center;gap:.4rem;font-size:.9rem;font-weight:600}
-.look{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.look-imgs{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
 .lprev{height:170px;border-radius:10px;background:var(--mist);display:grid;place-items:center;overflow:hidden;color:var(--muted)}
 .lprev img{max-width:100%;max-height:100%;object-fit:contain}
 .lact{display:flex;gap:.6rem;flex-wrap:wrap}
 
+/* =====================  Meddelande, galleri, lightbox  ===================== */
+.notice{background:var(--leaf);color:var(--forest);text-align:center;font-weight:600;font-size:.92rem;padding:.55rem 1rem}
+.gal{columns:3 260px;column-gap:1.2rem}
+.gal figure{break-inside:avoid;margin:0 0 1.2rem}
+.gal-item{display:block;width:100%;border:0;padding:0;background:none;cursor:zoom-in;border-radius:14px;overflow:hidden}
+.gal-item img{width:100%;height:auto;display:block}
+.gal figcaption{color:var(--muted);font-size:.92rem;padding:.4rem .1rem 0}
+.lb{width:min(1000px,calc(100% - 1.5rem));background:transparent;box-shadow:none;overflow:visible;text-align:center}
+.lb img{max-height:80vh;width:auto;max-width:100%;margin:0 auto;border-radius:12px}
+.lb p{color:#fff;margin-top:.7rem}
+.lb .x{position:absolute;top:-2.6rem;right:0;color:#fff}
+
+/* =====================  Admin: stil, texter, galleri  ===================== */
+.stack{display:grid;gap:1.2rem;align-content:start}
+.swatches{display:flex;gap:.6rem;flex-wrap:wrap}
+.swatch{display:flex;align-items:center;gap:.6rem;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:.45rem 1rem .45rem .55rem;font-weight:600;cursor:pointer}
+.swatch.on{border-color:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--leaf) 35%,transparent)}
+.dots{display:flex;padding-right:6px}
+.dots i{width:18px;height:18px;border-radius:50%;margin-right:-6px;border:2px solid #fff}
+.pickers{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+.pickers input[type=color]{height:46px;padding:.2rem;cursor:pointer}
+.grow{display:grid;grid-template-columns:96px 1fr auto;gap:1rem;align-items:center;padding:.7rem 0;border-top:1px solid var(--line)}
+.grow img{width:96px;height:72px;object-fit:cover;border-radius:10px}
+.gbtns{display:flex;gap:.4rem}
+.gal-add{justify-self:start}
+
 @media (max-width:820px){
-  .hero-grid{grid-template-columns:1fr;padding-block:3rem 5rem}
-  .hero-art{justify-self:center}
-  .co-grid,.cols,.pgrid,.look{grid-template-columns:1fr}
+  .hero{align-items:flex-start;min-height:0}
+  .hero-grid{padding-block:3rem 18rem}
+  .hero::before{background:linear-gradient(180deg,color-mix(in srgb,var(--sky-1) 90%,transparent) 0%,color-mix(in srgb,var(--sky-1) 55%,transparent) 42%,transparent 68%)}
+  .co-grid,.cols,.pgrid,.look-imgs{grid-template-columns:1fr}
+  .grow{grid-template-columns:72px 1fr}
+  .grow img{width:72px;height:56px}
+  .gbtns{grid-column:1/-1}
   .order summary{grid-template-columns:auto 1fr auto}
   .order summary .pill{grid-column:1/-1;justify-self:start}
   .prow{grid-template-columns:56px 1fr}
@@ -243,6 +292,7 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
 
 <!-- ============================ BUTIK ============================ -->
 <div id="shop" hidden>
+  <div class="notice" id="notice" hidden></div>
   <header class="site-header">
     <div class="wrap nav">
       <a href="/" class="brand" data-brand aria-label="Swing2go, startsida"><span class="mark"><svg viewBox="0 0 100 100"><use href="#ball"/></svg></span><span class="word">Swing<b>2</b>go</span></a>
@@ -251,54 +301,118 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
   </header>
 
   <section class="hero">
+    <!-- Golfbanan. Byts mot ditt eget foto om du laddar upp en bild i admin. -->
+    <div class="hero-bg" id="hero-art">
+      <svg viewBox="0 0 1600 700" preserveAspectRatio="xMaxYMax slice" role="img" aria-label="En golfbana i skymning med fairway, träd, bunker och ett hål med flagga. En golfboll flyger mot hålet.">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--sky-1)"/><stop offset=".55" style="stop-color:var(--sky-2)"/><stop offset="1" style="stop-color:var(--sky-3)"/>
+          </linearGradient>
+          <radialGradient id="glow">
+            <stop offset="0" style="stop-color:var(--glow)" stop-opacity=".8"/><stop offset=".4" style="stop-color:var(--glow)" stop-opacity=".25"/><stop offset="1" style="stop-color:var(--glow)" stop-opacity="0"/>
+          </radialGradient>
+          <pattern id="mow" width="150" height="150" patternUnits="userSpaceOnUse" patternTransform="rotate(-8)">
+            <rect width="150" height="150" style="fill:var(--green)"/><rect width="75" height="150" style="fill:var(--mow-2)"/>
+          </pattern>
+          <pattern id="mowg" width="64" height="64" patternUnits="userSpaceOnUse" patternTransform="rotate(-8)">
+            <rect width="64" height="64" style="fill:var(--gr-1)"/><rect width="32" height="64" style="fill:var(--gr-2)"/>
+          </pattern>
+          <symbol id="tree" viewBox="0 0 60 90">
+            <rect x="27" y="56" width="6" height="30" style="fill:var(--trunk)"/>
+            <circle cx="30" cy="34" r="24" style="fill:var(--forest)"/><circle cx="19" cy="43" r="16" style="fill:var(--forest)"/><circle cx="41" cy="43" r="16" style="fill:var(--forest)"/>
+            <circle cx="30" cy="28" r="15" style="fill:var(--tree-hi)"/>
+          </symbol>
+        </defs>
+
+        <rect width="1600" height="700" fill="url(#sky)"/>
+        <circle cx="1230" cy="330" r="320" fill="url(#glow)"/>
+        <circle cx="1230" cy="322" r="46" style="fill:var(--glow)" opacity=".9"/>
+        <g style="fill:var(--glow)" opacity=".08">
+          <ellipse cx="300" cy="130" rx="220" ry="16"/><ellipse cx="380" cy="152" rx="150" ry="12"/>
+          <ellipse cx="980" cy="90" rx="260" ry="14"/><ellipse cx="1420" cy="170" rx="200" ry="14"/>
+        </g>
+
+        <!-- Fjärran kullar med trädrad -->
+        <path d="M0 392 C 180 340, 380 352, 560 376 C 760 404, 900 338, 1110 344 C 1300 350, 1450 318, 1600 352 L1600 700 L0 700Z" style="fill:var(--hill-1)"/>
+        <path d="M0 388 C 180 336, 380 348, 560 372 C 760 400, 900 334, 1110 340 C 1300 346, 1450 314, 1600 348" fill="none" style="stroke:var(--tree-line)" stroke-width="20" stroke-dasharray="1 15" stroke-linecap="round"/>
+        <path d="M0 478 C 240 420, 520 440, 780 456 C 1020 472, 1200 428, 1600 436 L1600 700 L0 700Z" style="fill:var(--hill-2)"/>
+        <path d="M0 470 C 240 412, 520 432, 780 448 C 1020 464, 1100 446, 1180 434" fill="none" style="stroke:var(--forest)" stroke-width="28" stroke-dasharray="1 24" stroke-linecap="round"/>
+        <use href="#tree" x="543.5" y="423" width="33" height="49.5"/>
+        <use href="#tree" x="595" y="425" width="30" height="45"/>
+        <use href="#tree" x="642" y="420" width="36" height="54"/>
+        <use href="#tree" x="1109" y="408" width="42" height="63"/>
+        <use href="#tree" x="1162" y="410" width="36" height="54"/>
+        <use href="#tree" x="1448" y="391" width="45" height="67.5"/>
+        <use href="#tree" x="1511" y="394" width="39" height="58.5"/>
+        <use href="#tree" x="1553" y="383" width="54" height="81"/>
+
+        <!-- Fairway med klippta ränder -->
+        <path d="M-50 700 L-50 548 C 260 508, 640 476, 980 494 C 1200 506, 1400 486, 1650 502 L1650 700 Z" fill="url(#mow)"/>
+
+        <!-- Green med kant -->
+        <ellipse cx="1330" cy="510" rx="244" ry="54" style="fill:var(--green)"/>
+        <ellipse cx="1330" cy="508" rx="225" ry="46" fill="url(#mowg)"/>
+        <ellipse cx="1330" cy="508" rx="225" ry="46" fill="none" style="stroke:var(--leaf)" stroke-opacity=".55" stroke-width="2"/>
+
+        <!-- Bunkrar -->
+        <path d="M1010 526 C 1030 504, 1120 502, 1150 520 C 1165 534, 1130 548, 1085 548 C 1040 548, 1000 542, 1010 526Z" style="fill:var(--forest)" fill-opacity=".4"/>
+        <path d="M1012 530 C 1032 510, 1120 508, 1148 524 C 1160 536, 1128 548, 1085 548 C 1042 548, 1004 543, 1012 530Z" fill="#eef5f0"/>
+        <ellipse cx="1560" cy="530" rx="48" ry="12" style="fill:var(--forest)" fill-opacity=".4"/>
+        <ellipse cx="1560" cy="533" rx="46" ry="11" fill="#eef5f0"/>
+
+        <!-- Träd i förgrunden -->
+        <use href="#tree" x="-5" y="431" width="90" height="135"/>
+        <use href="#tree" x="114" y="442" width="72" height="108"/>
+        <use href="#tree" x="220" y="444" width="60" height="90"/>
+        <use href="#tree" x="304.5" y="447" width="51" height="76.5"/>
+        <use href="#tree" x="1486" y="445" width="108" height="162"/>
+
+        <!-- Hål med flagga -->
+        <ellipse cx="1352" cy="512" rx="15" ry="5" style="fill:var(--sky-1)"/>
+        <rect x="1350.5" y="380" width="3" height="132" rx="1.5" fill="#fff"/>
+        <path d="M1353.5 382 L1410 404 L1353.5 426 Z" fill="#fff"/>
+
+        <!-- Tee, bollbana och boll -->
+        <path d="M954 585 h12 l-3 20 h-6 z" fill="#fff"/>
+        <path d="M960 565 C 1030 230, 1270 230, 1326 502" fill="none" style="stroke:var(--leaf)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 12"/>
+        <g transform="translate(960 565)">
+          <g>
+            <animateMotion dur="1.9s" begin="0.6s" fill="freeze" path="M0 0 C 70 -335, 310 -335, 366 -63" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".25 .1 .25 1"/>
+            <g transform="scale(1.25)">
+              <animateTransform attributeName="transform" type="scale" from="1.25" to="0.6" begin="0.6s" dur="1.9s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".25 .1 .25 1"/>
+              <use href="#ball" x="-16" y="-16" width="32" height="32"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+
     <div class="wrap hero-grid">
       <div>
-        <h1>Spela mer,<br>betala mindre.</h1>
-        <p class="lead">Begagnade golfbollar i bra skick. Du handlar som gäst – inget konto och ingen inloggning.</p>
-        <a class="btn btn-primary" href="#butik">Se bollarna</a>
-      </div>
-
-      <!-- Bollen flyger från tee till hålet. Byts mot din egen bild om du laddar upp en i admin. -->
-      <div class="hero-art" id="hero-art">
-        <svg viewBox="0 0 480 420" role="img" aria-label="En golfboll flyger från tee mot ett hål med flagga">
-          <defs><clipPath id="gclip"><ellipse cx="240" cy="335" rx="228" ry="72"/></clipPath></defs>
-          <g clip-path="url(#gclip)">
-            <rect x="0" y="250" width="480" height="170" fill="#2a9a5c"/>
-            <g fill="#33a864">
-              <rect x="0" y="250" width="48" height="170"/><rect x="96" y="250" width="48" height="170"/>
-              <rect x="192" y="250" width="48" height="170"/><rect x="288" y="250" width="48" height="170"/>
-              <rect x="384" y="250" width="48" height="170"/>
-            </g>
-          </g>
-          <ellipse cx="240" cy="335" rx="228" ry="72" fill="none" stroke="#58c987" stroke-opacity=".55" stroke-width="2"/>
-          <ellipse cx="352" cy="336" rx="17" ry="6" fill="#06281a"/>
-          <rect x="350.5" y="120" width="3" height="216" rx="1.5" fill="#fff"/>
-          <path d="M353.5 122 L412 146 L353.5 170 Z" fill="#fff"/>
-          <path d="M98 318 h12 l-3 22 h-6 z" fill="#fff"/>
-          <path d="M104 300 C 160 70, 300 70, 326 324" fill="none" stroke="#58c987" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 12"/>
-          <g transform="translate(104 300)">
-            <g>
-              <animateMotion dur="1.8s" begin="0.5s" fill="freeze" path="M0 0 C 56 -230, 196 -230, 222 24" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".25 .1 .25 1"/>
-              <use href="#ball" x="-18" y="-18" width="36" height="36"/>
-            </g>
-          </g>
-        </svg>
+        <h1 data-t="hero_title">Spela mer,<br>betala mindre.</h1>
+        <p class="lead" data-t="hero_text">Begagnade golfbollar i bra skick. Du handlar som gäst – inget konto och ingen inloggning.</p>
+        <a class="btn btn-primary" href="#butik" data-t="hero_button">Se bollarna</a>
       </div>
     </div>
   </section>
 
   <main id="butik" class="wrap section">
     <div class="section-head">
-      <h2>Bollar</h2>
+      <h2 data-t="products_title">Bollar</h2>
       <div class="chips" id="filters"></div>
     </div>
     <div class="grid" id="grid"><p class="empty">Laddar bollar…</p></div>
   </main>
 
+  <section id="galleri" class="wrap section" hidden>
+    <div class="section-head"><h2 data-t="gallery_title">Bilder</h2></div>
+    <div class="gal" id="gal"></div>
+  </section>
+
   <footer class="foot">
     <div class="wrap foot-in">
       <a href="/" class="brand" data-brand aria-label="Swing2go, startsida"><span class="mark"><svg viewBox="0 0 100 100"><use href="#ball"/></svg></span><span class="word">Swing<b>2</b>go</span></a>
-      <p>Begagnade golfbollar. © <span id="yr"></span> Swing2go</p>
+      <p><span data-t="footer_text">Begagnade golfbollar.</span> © <span id="yr"></span> Swing2go</p>
       <a class="adm" href="/admin">Admin</a>
     </div>
   </footer>
@@ -345,6 +459,12 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
       <button class="btn btn-dark" data-act="close-dialog">Fortsätt handla</button>
     </div>
   </dialog>
+
+  <dialog id="lightbox" class="lb">
+    <button class="x" data-act="close-dialog" aria-label="Stäng">×</button>
+    <img id="lb-img" alt="">
+    <p id="lb-cap"></p>
+  </dialog>
 </div>
 
 <!-- ============================ ADMIN ============================ -->
@@ -374,7 +494,8 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
     <nav class="tabs">
       <button class="on" data-act="tab" data-v="orders">Ordrar <i id="new-count"></i></button>
       <button data-act="tab" data-v="products">Produkter</button>
-      <button data-act="tab" data-v="look">Logga och bilder</button>
+      <button data-act="tab" data-v="look">Utseende</button>
+      <button data-act="tab" data-v="content">Innehåll</button>
     </nav>
 
     <div id="t-orders">
@@ -401,7 +522,8 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
       <div id="p-list"></div>
     </div>
 
-    <div id="t-look" class="look" hidden></div>
+    <div id="t-look" class="stack" hidden></div>
+    <div id="t-content" class="stack" hidden></div>
   </section>
 </div>
 
@@ -432,6 +554,7 @@ function toast(msg, type = '') {
 let sb, settings = {};
 const click = {};    // data-act="..."     -> funktion
 const change = {};   // data-change="..."  -> funktion
+const inputs = {};   // data-input="..."   -> funktion
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]');
   if (el && click[el.dataset.act]) run(() => click[el.dataset.act](el, e));
@@ -439,6 +562,10 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   const el = e.target.closest('[data-change]');
   if (el && change[el.dataset.change]) run(() => change[el.dataset.change](el, e));
+});
+document.addEventListener('input', e => {
+  const el = e.target.closest('[data-input]');
+  if (el && inputs[el.dataset.input]) run(() => inputs[el.dataset.input](el, e));
 });
 
 /* ---------- Start ---------- */
@@ -453,7 +580,9 @@ async function init() {
   }
   const { data } = await sb.from('settings').select('*');
   settings = Object.fromEntries((data || []).map(r => [r.key, r.value]));
+  applyTheme(styleState());
   applyBrand();
+  applyContent();
   location.pathname.startsWith('/admin') ? adminInit() : shopInit();
 }
 
@@ -464,8 +593,98 @@ function applyBrand() {
       el.innerHTML = `<img class="logo-img" src="${esc(settings.logo_url)}" alt="Swing2go">` + (tag ? tag.outerHTML : '');
     });
   }
-  if (settings.hero_url) $('#hero-art').innerHTML = `<img class="hero-img" src="${esc(settings.hero_url)}" alt="">`;
+  if (settings.hero_url) $('#hero-art').innerHTML = `<img src="${esc(settings.hero_url)}" alt="">`;
 }
+
+/* =====================================================================
+   TEMA, TEXTER OCH GALLERI (gemensamt för butik och admin)
+   ===================================================================== */
+const THEMES = {
+  golf:  { name: 'Golfgrön', dark: '#0b3524', green: '#2a9a5c', leaf: '#58c987' },
+  skog:  { name: 'Skog',     dark: '#0f2418', green: '#3f7d4e', leaf: '#8ccf9b' },
+  fresh: { name: 'Fräsch',   dark: '#0d4a2f', green: '#22a55a', leaf: '#9be564' },
+  kol:   { name: 'Kol',      dark: '#08150f', green: '#1f8a52', leaf: '#3ddc84' },
+};
+const FONTS = {
+  fraunces: { name: 'Fraunces (klassisk)',        family: "'Fraunces', Georgia, 'Times New Roman', serif", url: '' },
+  playfair: { name: 'Playfair Display (elegant)', family: "'Playfair Display', Georgia, 'Times New Roman', serif", url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap' },
+  lora:     { name: 'Lora (mjuk)',                family: "'Lora', Georgia, 'Times New Roman', serif", url: 'https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap' },
+  outfit:   { name: 'Outfit (modern)',            family: "'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&display=swap' },
+};
+const HEX = /^#[0-9a-f]{6}$/i;
+const hex = (v, d) => (HEX.test(v || '') ? v : d);
+
+const styleState = (s = settings) => ({
+  theme: (THEMES[s.theme] || s.theme === 'custom') ? s.theme : 'golf',
+  c_dark: hex(s.c_dark, THEMES.golf.dark),
+  c_green: hex(s.c_green, THEMES.golf.green),
+  c_leaf: hex(s.c_leaf, THEMES.golf.leaf),
+  font_head: FONTS[s.font_head] ? s.font_head : 'fraunces',
+});
+const themeColors = st => st.theme === 'custom' ? { dark: st.c_dark, green: st.c_green, leaf: st.c_leaf } : (THEMES[st.theme] || THEMES.golf);
+
+function applyTheme(st) {
+  const c = themeColors(st), f = FONTS[st.font_head] || FONTS.fraunces;
+  const r = document.documentElement.style;
+  r.setProperty('--forest', c.dark); r.setProperty('--green', c.green); r.setProperty('--leaf', c.leaf);
+  r.setProperty('--display', f.family);
+  if (f.url && !document.querySelector(`link[data-font="${st.font_head}"]`)) {
+    const l = document.createElement('link');
+    l.rel = 'stylesheet'; l.href = f.url; l.dataset.font = st.font_head;
+    document.head.appendChild(l);
+  }
+  try { localStorage.setItem('s2g-theme', JSON.stringify({ dark: c.dark, green: c.green, leaf: c.leaf, family: f.family, url: f.url })); } catch {}
+}
+
+const TEXT_DEFAULTS = {
+  notice: '',
+  hero_title: 'Spela mer,\nbetala mindre.',
+  hero_text: 'Begagnade golfbollar i bra skick. Du handlar som gäst – inget konto och ingen inloggning.',
+  hero_button: 'Se bollarna',
+  products_title: 'Bollar',
+  gallery_title: 'Bilder',
+  footer_text: 'Begagnade golfbollar.',
+};
+
+function applyContent() {
+  const val = k => (settings[k] || '').trim() || TEXT_DEFAULTS[k];
+  $$('[data-t]').forEach(el => {
+    const k = el.dataset.t;
+    if (k === 'hero_title') el.innerHTML = esc(val(k)).replace(/\n/g, '<br>');
+    else el.textContent = val(k);
+  });
+  const n = (settings.notice || '').trim();
+  $('#notice').textContent = n;
+  $('#notice').hidden = !n;
+}
+
+function galleryList() {
+  try {
+    const a = JSON.parse(settings.gallery || '[]');
+    return Array.isArray(a)
+      ? a.filter(g => g && typeof g.url === 'string' && g.url.startsWith('https://')).map(g => ({ url: g.url, caption: String(g.caption || '').slice(0, 120) }))
+      : [];
+  } catch { return []; }
+}
+
+function renderGallery() {
+  const list = galleryList();
+  $('#galleri').hidden = !list.length;
+  $('#gal').innerHTML = list.map((g, i) => `
+    <figure>
+      <button class="gal-item" data-act="zoom" data-i="${i}" aria-label="Förstora bild${g.caption ? ': ' + esc(g.caption) : ''}"><img src="${esc(g.url)}" alt="${esc(g.caption || 'Bild')}" loading="lazy"></button>
+      ${g.caption ? `<figcaption>${esc(g.caption)}</figcaption>` : ''}
+    </figure>`).join('');
+}
+
+click.zoom = el => {
+  const g = galleryList()[+el.dataset.i];
+  if (!g) return;
+  $('#lb-img').src = g.url; $('#lb-img').alt = g.caption;
+  $('#lb-cap').textContent = g.caption;
+  $('#lightbox').showModal();
+};
+$('#lightbox').addEventListener('click', e => { if (e.target.id === 'lightbox') e.target.close(); });
 
 /* =====================================================================
    BUTIK
@@ -485,6 +704,7 @@ async function shopInit() {
   await loadProducts();
   renderProducts();
   renderCart();
+  renderGallery();
 }
 
 async function loadProducts() {
@@ -642,11 +862,13 @@ click.logout = async () => { await sb.auth.signOut(); location.reload(); };
 click.tab = el => tab(el.dataset.v);
 
 function tab(name) {
+  draft = null; applyTheme(styleState());          // osparade stilförändringar rullas tillbaka
   $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === name));
-  ['orders', 'products', 'look'].forEach(t => ($('#t-' + t).hidden = t !== name));
+  ['orders', 'products', 'look', 'content'].forEach(t => ($('#t-' + t).hidden = t !== name));
   if (name === 'orders') loadOrders();
   if (name === 'products') loadAdminProducts();
   if (name === 'look') renderLook();
+  if (name === 'content') renderContent();
 }
 
 /* ----- Ordrar ----- */
@@ -829,14 +1051,23 @@ change['p-active'] = async el => {
   await loadAdminProducts();
 };
 
-/* ----- Logga och bilder ----- */
+/* ----- Utseende ----- */
+let draft = null;
+
 const LOOK = [
   ['logo_url', 'Logotyp', 'Visas i toppen och i sidfoten. PNG eller SVG med genomskinlig bakgrund fungerar bäst.'],
-  ['hero_url', 'Bild på startsidan', 'Ersätter golfboll-illustrationen överst. Kvadratisk bild, minst 800 pixlar bred.'],
+  ['hero_url', 'Bild på startsidan', 'Ersätter den ritade golfbanan överst. Använd en bred, liggande bild (helst ett golfbanefoto), minst 1600 pixlar bred.'],
 ];
 
 function renderLook() {
-  $('#t-look').innerHTML = LOOK.map(([key, title, help]) => `
+  draft = draft || styleState();
+  const swatches = Object.entries(THEMES).map(([id, t]) => `
+    <button type="button" class="swatch ${draft.theme === id ? 'on' : ''}" data-act="theme" data-v="${id}">
+      <span class="dots"><i style="background:${t.dark}"></i><i style="background:${t.green}"></i><i style="background:${t.leaf}"></i></span>${t.name}
+    </button>`).join('');
+  const fontOpts = Object.entries(FONTS).map(([id, f]) => `<option value="${id}" ${draft.font_head === id ? 'selected' : ''}>${f.name}</option>`).join('');
+  const picker = (key, label) => `<label class="field"><span>${label}</span><input type="color" value="${draft['c_' + key]}" data-input="color" data-key="${key}"></label>`;
+  const imgs = LOOK.map(([key, title, help]) => `
     <div class="panel-box">
       <h3>${title}</h3>
       <p class="muted">${help}</p>
@@ -846,13 +1077,57 @@ function renderLook() {
         ${settings[key] ? `<button class="btn btn-ghost btn-sm danger" data-act="clear-img" data-key="${key}">Ta bort</button>` : ''}
       </div>
     </div>`).join('');
+  $('#t-look').innerHTML = `
+    <div class="panel-box">
+      <h3>Färger och typsnitt</h3>
+      <p class="muted">Ändringarna syns direkt här i admin. Klicka på Spara stil för att visa dem i butiken.</p>
+      <div class="swatches">${swatches}</div>
+      <div class="pickers">${picker('dark', 'Mörk färg')}${picker('green', 'Huvudfärg')}${picker('leaf', 'Ljus accent')}</div>
+      <label class="field"><span>Typsnitt för rubriker</span><select data-change="font">${fontOpts}</select></label>
+      <div class="pact">
+        <button class="btn btn-dark" data-act="style-save">Spara stil</button>
+        <button class="btn btn-ghost" data-act="style-reset">Tillbaka till golfgrön</button>
+      </div>
+    </div>
+    <div class="look-imgs">${imgs}</div>`;
 }
 
-async function saveSetting(key, value) {
-  const { error } = await sb.from('settings').upsert({ key, value });
+async function saveSettings(obj) {
+  const rows = Object.entries(obj).map(([key, value]) => ({ key, value: String(value ?? '') }));
+  const { error } = await sb.from('settings').upsert(rows);
   if (error) throw new Error('Kunde inte spara: ' + error.message);
-  settings[key] = value;
+  Object.assign(settings, obj);
 }
+const saveSetting = (key, value) => saveSettings({ [key]: value });
+
+async function removeFile(url) {                    // städar bort filen ur lagringen (fel ignoreras)
+  try {
+    const path = String(url).split('/storage/v1/object/public/media/')[1];
+    if (path) await sb.storage.from('media').remove([decodeURIComponent(path)]);
+  } catch {}
+}
+
+click.theme = el => {
+  const t = THEMES[el.dataset.v];
+  draft = { ...draft, theme: el.dataset.v, c_dark: t.dark, c_green: t.green, c_leaf: t.leaf };
+  applyTheme(draft); renderLook();
+};
+inputs.color = el => {
+  draft = { ...draft, theme: 'custom', ['c_' + el.dataset.key]: el.value };
+  applyTheme(draft);
+  $$('.swatch').forEach(b => b.classList.remove('on'));
+};
+change.font = el => { draft = { ...draft, font_head: el.value }; applyTheme(draft); };
+click['style-reset'] = () => {
+  const t = THEMES.golf;
+  draft = { theme: 'golf', c_dark: t.dark, c_green: t.green, c_leaf: t.leaf, font_head: 'fraunces' };
+  applyTheme(draft); renderLook();
+};
+click['style-save'] = async () => {
+  const d = draft || styleState();
+  await saveSettings({ theme: d.theme, c_dark: d.c_dark, c_green: d.c_green, c_leaf: d.c_leaf, font_head: d.font_head });
+  toast('Stilen sparades. Den syns nu i butiken.');
+};
 
 change['set-img'] = async el => {
   const file = el.files[0];
@@ -869,6 +1144,109 @@ click['clear-img'] = async el => {
   await saveSetting(el.dataset.key, '');
   renderLook();
   toast(el.dataset.key === 'logo_url' ? 'Logotypen togs bort. Ladda om sidan för att se standardlogotypen.' : 'Bilden togs bort');
+};
+
+/* ----- Innehåll: texter och bildgalleri ----- */
+const TEXT_FIELDS = [
+  ['notice', 'Meddelande överst på sidan (valfritt)', 'input', 140],
+  ['hero_title', 'Stor rubrik (ny rad ger radbrytning)', 'area2', 80],
+  ['hero_text', 'Text under rubriken', 'area3', 260],
+  ['hero_button', 'Text på knappen', 'input', 30],
+  ['products_title', 'Rubrik över produkterna', 'input', 40],
+  ['gallery_title', 'Rubrik över bildgalleriet', 'input', 40],
+  ['footer_text', 'Text i sidfoten', 'input', 120],
+];
+let gal = [];
+
+function renderContent() {
+  gal = galleryList();
+  const fields = TEXT_FIELDS.map(([k, label, type, max]) => {
+    const ph = esc(TEXT_DEFAULTS[k] || '');
+    const v = esc(settings[k] || '');
+    const control = type === 'input'
+      ? `<input name="${k}" maxlength="${max}" value="${v}" placeholder="${ph}">`
+      : `<textarea name="${k}" rows="${type === 'area2' ? 2 : 3}" maxlength="${max}" placeholder="${ph}">${v}</textarea>`;
+    return `<label class="field"><span>${label}</span>${control}</label>`;
+  }).join('');
+  $('#t-content').innerHTML = `
+    <form class="panel-box" id="text-form">
+      <h3>Texter</h3>
+      <p class="muted">Lämna ett fält tomt så används standardtexten (den grå texten i fältet).</p>
+      ${fields}
+      <div class="pact"><button class="btn btn-dark">Spara texter</button></div>
+    </form>
+    <div class="panel-box">
+      <h3>Bilder på hemsidan</h3>
+      <p class="muted">Bilderna visas som ett galleri under produkterna. Välj en eller flera bilder, max 5 MB per bild. Galleriet syns bara när det finns bilder.</p>
+      <label class="btn btn-dark btn-sm gal-add">Lägg till bilder<input type="file" accept="image/*" multiple hidden data-change="gal-add"></label>
+      <div id="gal-admin"></div>
+    </div>`;
+  renderGalleryAdmin();
+}
+
+document.addEventListener('submit', e => {
+  if (e.target.id !== 'text-form') return;
+  e.preventDefault();
+  run(async () => {
+    const d = Object.fromEntries(new FormData(e.target));
+    const obj = {};
+    for (const [k] of TEXT_FIELDS) obj[k] = (d[k] || '').trim();
+    await saveSettings(obj);
+    toast('Texterna sparades');
+  });
+});
+
+function renderGalleryAdmin() {
+  $('#gal-admin').innerHTML = gal.length ? gal.map((g, i) => `
+    <div class="grow">
+      <img src="${esc(g.url)}" alt="">
+      <input value="${esc(g.caption)}" maxlength="120" placeholder="Bildtext (valfritt)" aria-label="Bildtext" data-change="gal-cap" data-i="${i}">
+      <div class="gbtns">
+        <button class="btn btn-ghost btn-sm" data-act="gal-up" data-i="${i}" ${i === 0 ? 'disabled' : ''}>Upp</button>
+        <button class="btn btn-ghost btn-sm" data-act="gal-down" data-i="${i}" ${i === gal.length - 1 ? 'disabled' : ''}>Ner</button>
+        <button class="btn btn-ghost btn-sm danger" data-act="gal-del" data-i="${i}">Ta bort</button>
+      </div>
+    </div>`).join('') : '<p class="empty">Inga bilder än.</p>';
+}
+const saveGallery = () => saveSetting('gallery', JSON.stringify(gal));
+
+change['gal-add'] = async el => {
+  const files = [...el.files];
+  if (!files.length) return;
+  if (gal.length + files.length > 30) { el.value = ''; throw new Error('Max 30 bilder i galleriet.'); }
+  let added = 0;
+  for (const [n, file] of files.entries()) {
+    toast(`Laddar upp ${n + 1} av ${files.length}…`);
+    try { gal.push({ url: await upload(file, 'gallery'), caption: '' }); added++; }
+    catch (x) { toast(x.message, 'bad'); }
+  }
+  el.value = '';
+  if (added) {
+    await saveGallery(); renderGalleryAdmin();
+    toast(added === 1 ? 'Bilden lades till' : `${added} bilder lades till`);
+  }
+};
+change['gal-cap'] = async el => {
+  gal[+el.dataset.i].caption = el.value.trim();
+  await saveGallery();
+  toast('Bildtexten sparades');
+};
+click['gal-up'] = async el => {
+  const i = +el.dataset.i;
+  [gal[i - 1], gal[i]] = [gal[i], gal[i - 1]];
+  await saveGallery(); renderGalleryAdmin();
+};
+click['gal-down'] = async el => {
+  const i = +el.dataset.i;
+  [gal[i + 1], gal[i]] = [gal[i], gal[i + 1]];
+  await saveGallery(); renderGalleryAdmin();
+};
+click['gal-del'] = async el => {
+  if (!confirm('Ta bort bilden från hemsidan?')) return;
+  const [gone] = gal.splice(+el.dataset.i, 1);
+  await saveGallery(); renderGalleryAdmin();
+  removeFile(gone.url);
+  toast('Bilden togs bort');
 };
 
 init();

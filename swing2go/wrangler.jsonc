@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "swing2go",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    // React-appen serveras som statiska filer.
+    "not_found_handling": "single-page-application",
+    // Bara /api/* går till Worker-koden först.
+    "run_worker_first": ["/api/*"]
+  },
+  // Publika värden (ingen hemlighet). Ändra till ert Supabase-projekt.
+  // Secrets läggs INTE här: använd .dev.vars lokalt och `wrangler secret put` i produktion.
+  "vars": {
+    "SUPABASE_URL": "https://DITT-PROJEKT.supabase.co",
+    "SUPABASE_ANON_KEY": "DIN-ANON-NYCKEL"
+  }
+}

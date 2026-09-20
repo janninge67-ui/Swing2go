@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* Swing2Go designtokens. Färgerna är tagna ur loggan. */
+@theme {
+  --color-skog: #0e3b24;        /* mörkgrön: "Swing" i loggan */
+  --color-skog-djup: #092a19;
+  --color-gras: #3e6b2a;        /* mellangrön: "2Go" i loggan */
+  --color-fairway: #a6db5c;     /* ljusgrön accent, används sparsamt */
+  --color-krita: #f4f1e6;       /* loggans papper */
+  --color-linje: #dedbcd;
+  --color-kol: #151a17;
+  --color-skiffer: #2b332e;
+
+  --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    font-family: var(--font-body);
+    color: var(--color-kol);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.005em;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-fairway);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Golfbollens ytstruktur som bakgrundsmönster. */
+  .dimples {
+    background-image:
+      radial-gradient(circle at center, rgb(255 255 255 / 0.055) 0 6px, transparent 7px),
+      radial-gradient(circle at center, rgb(255 255 255 / 0.055) 0 6px, transparent 7px);
+    background-size: 34px 34px;
+    background-position: 0 0, 17px 17px;
+  }
+  .dimples-ljus {
+    background-image:
+      radial-gradient(circle at center, rgb(14 59 36 / 0.06) 0 6px, transparent 7px),
+      radial-gradient(circle at center, rgb(14 59 36 / 0.06) 0 6px, transparent 7px);
+    background-size: 34px 34px;
+    background-position: 0 0, 17px 17px;
+  }
+
+  .knapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0 1.5rem;
+    border-radius: 999px;
+    font-weight: 700;
+    transition: transform 0.15s, background-color 0.15s, color 0.15s;
+  }
+  .knapp:active { transform: translateY(1px); }
+  .knapp-ljus { background: var(--color-fairway); color: var(--color-skog-djup); }
+  .knapp-ljus:hover { background: #b9e677; }
+  .knapp-mork { background: var(--color-skog); color: #fff; }
+  .knapp-mork:hover { background: var(--color-skog-djup); }
+  .knapp-kontur { border: 2px solid currentColor; }
+  .knapp-kontur:hover { background: rgb(255 255 255 / 0.1); }
+
+  .wrap { width: min(100% - 2.5rem, 76rem); margin-inline: auto; }
+}
+
+@keyframes kort-in {
+  from { opacity: 0; transform: translateY(-1.5rem) rotate(-7deg); }
+  to   { opacity: 1; transform: translateY(0) rotate(-2deg); }
+}
+.animera-kort { animation: kort-in 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.1) both; }

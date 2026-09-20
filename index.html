@@ -36,9 +36,9 @@ try{var t=JSON.parse(localStorage.getItem('s2g-theme'));if(t){var r=document.doc
   --tree-line:color-mix(in srgb,var(--forest) 82%,var(--green));
   --tree-hi:color-mix(in srgb,var(--forest) 65%,var(--green));
   --trunk:color-mix(in srgb,var(--forest) 80%,#000);
-  --mow-2:color-mix(in srgb,var(--green) 77%,var(--leaf));
-  --gr-1:color-mix(in srgb,var(--green) 60%,var(--leaf));
-  --gr-2:color-mix(in srgb,var(--green) 32%,var(--leaf));
+  --mow-2:color-mix(in srgb,var(--green) 90%,#fff);
+  --gr-1:color-mix(in srgb,var(--green) 84%,#fff);
+  --gr-2:color-mix(in srgb,var(--green) 72%,#fff);
   --glow:color-mix(in srgb,var(--leaf) 16%,#fff);
   --danger:#a12a2a;
   --display:'Fraunces', Georgia, 'Times New Roman', serif;
@@ -250,6 +250,22 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
 .grow img{width:96px;height:72px;object-fit:cover;border-radius:10px}
 .gbtns{display:flex;gap:.4rem}
 .gal-add{justify-self:start}
+
+/* =====================  Fallande tema  ===================== */
+#fx{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:35}
+.fx-p{position:absolute;top:-70px;animation:fx-fall linear infinite;will-change:transform}
+.fx-p i{display:block;width:100%;height:100%;background:center/contain no-repeat;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));animation:fx-sway ease-in-out infinite alternate}
+@keyframes fx-fall{to{transform:translateY(calc(100vh + 140px))}}
+@keyframes fx-sway{from{transform:translateX(calc(var(--sway) * -1)) rotate(calc(var(--spin) * -1))}to{transform:translateX(var(--sway)) rotate(var(--spin))}}
+.panel-box h4{font-size:1.15rem;margin-top:.5rem}
+.fxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:.7rem}
+.fxcard{display:grid;justify-items:center;align-content:start;gap:.15rem;padding:.9rem .6rem;border:1.5px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;text-align:center}
+.fxcard:hover{border-color:var(--green)}
+.fxcard.on{border-color:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--leaf) 35%,transparent)}
+.fxcard img{width:46px;height:46px;object-fit:contain;margin-bottom:.35rem}
+.fxcard b{font-size:.95rem}
+.fxcard small{color:var(--muted);font-size:.8rem}
+.fxamount{max-width:220px}
 
 @media (max-width:820px){
   .hero{align-items:flex-start;min-height:0}
@@ -620,6 +636,8 @@ const styleState = (s = settings) => ({
   c_green: hex(s.c_green, THEMES.golf.green),
   c_leaf: hex(s.c_leaf, THEMES.golf.leaf),
   font_head: FONTS[s.font_head] ? s.font_head : 'fraunces',
+  effect: FX[s.effect] ? s.effect : 'none',
+  fx_amount: FX_AMOUNT[s.fx_amount] ? s.fx_amount : 'normal',
 });
 const themeColors = st => st.theme === 'custom' ? { dark: st.c_dark, green: st.c_green, leaf: st.c_leaf } : (THEMES[st.theme] || THEMES.golf);
 
@@ -634,6 +652,80 @@ function applyTheme(st) {
     document.head.appendChild(l);
   }
   try { localStorage.setItem('s2g-theme', JSON.stringify({ dark: c.dark, green: c.green, leaf: c.leaf, family: f.family, url: f.url })); } catch {}
+}
+
+/* ----- Fallande tema: sprites och motor ----- */
+const svgUri = s => 'data:image/svg+xml,' + encodeURIComponent(s);
+const sprite = (vb, inner, r = 1) => ({ src: svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}">${inner}</svg>`), r });
+
+const S_BALL = sprite('0 0 100 100', `<defs><radialGradient id="g" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#d3e0d8"/></radialGradient><pattern id="d" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="4.5" cy="4.5" r="1.5" fill="#0b3524" fill-opacity=".16"/></pattern></defs><circle cx="50" cy="50" r="47" fill="url(#g)"/><circle cx="50" cy="50" r="47" fill="url(#d)"/><circle cx="50" cy="50" r="47" fill="none" stroke="#0b3524" stroke-opacity=".3" stroke-width="2"/>`);
+const S_GHOST = sprite('0 0 60 68', `<path d="M8 64V30C8 13 19 3 30 3s22 10 22 27v34l-7-7-7 7-8-7-8 7-7-7z" fill="#fff" stroke="#cfc6df" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="22" cy="28" rx="3.6" ry="5.2" fill="#1a1026"/><ellipse cx="38" cy="28" rx="3.6" ry="5.2" fill="#1a1026"/><ellipse cx="30" cy="41" rx="4" ry="5.5" fill="#1a1026"/><circle cx="15.5" cy="37" r="3" fill="#ffb3c7" opacity=".65"/><circle cx="44.5" cy="37" r="3" fill="#ffb3c7" opacity=".65"/>`, 68 / 60);
+const S_PUMPKIN = sprite('0 0 60 56', `<ellipse cx="18" cy="34" rx="14" ry="19" fill="#e2751b"/><ellipse cx="42" cy="34" rx="14" ry="19" fill="#e2751b"/><ellipse cx="30" cy="34" rx="13" ry="20" fill="#f6a04a"/><path d="M27 15c1-8 5-10 9-10l1 4c-3 0-4 2-4 6z" fill="#3f7d2e"/><path d="M17 30l6-6 3 8zM43 30l-6-6-3 8zM19 41q11 9 22 0l-4-3-3 4-4-4-4 4-3-4z" fill="#2a1608"/>`, 56 / 60);
+const leaf = c => sprite('0 0 40 44', `<path d="M20 2C31 10 38 19 34 31c-2 6-7 10-14 10S8 37 6 31C2 19 9 10 20 2z" fill="${c}"/><path d="M20 8v35M20 20l7-5M20 27l8-5M20 20l-7-5M20 27l-8-5" stroke="#6b2a0c" stroke-opacity=".45" stroke-width="1.6" stroke-linecap="round" fill="none"/>`, 44 / 40);
+const S_SNOW = (() => {
+  let d = '';
+  for (let a = 0; a < 6; a++) {
+    const ang = a * Math.PI / 3, ux = Math.cos(ang), uy = Math.sin(ang);
+    d += `M20 20L${(20 + ux * 17).toFixed(1)} ${(20 + uy * 17).toFixed(1)}`;
+    for (const s of [-1, 1]) {
+      const b = ang + s * 0.75;
+      d += `M${(20 + ux * 11).toFixed(1)} ${(20 + uy * 11).toFixed(1)}l${(Math.cos(b) * 5).toFixed(1)} ${(Math.sin(b) * 5).toFixed(1)}`;
+    }
+  }
+  return sprite('0 0 40 40', `<path d="${d}" stroke="#a9d4f2" stroke-width="2.4" stroke-linecap="round" fill="none"/><circle cx="20" cy="20" r="3" fill="#fff"/>`);
+})();
+const petal = (a, b) => sprite('0 0 30 40', `<defs><linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><path d="M15 2C26 9 30 24 15 38 0 24 4 9 15 2z" fill="url(#p)"/><path d="M15 8v24" stroke="#fff" stroke-opacity=".4" stroke-width="1.2" stroke-linecap="round"/>`, 40 / 30);
+const CONF = ['#2a9a5c', '#58c987', '#ffb703', '#ff7ab0', '#4cc9f0', '#0b3524', '#ff5d5d'];
+const confetti = c => [
+  sprite('0 0 10 16', `<rect width="10" height="16" rx="2" fill="${c}"/>`, 1.6),
+  sprite('0 0 12 12', `<circle cx="6" cy="6" r="5.5" fill="${c}"/>`),
+  sprite('0 0 14 14', `<path d="M7 1l6.5 12h-13z" fill="${c}"/>`),
+];
+
+const FX = {
+  none:     { name: 'Inget',      sub: 'Av', icon: svgUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="#9aa9a0" stroke-width="3"/><path d="M10 30L30 10" stroke="#9aa9a0" stroke-width="3"/></svg>') },
+  golf:     { name: 'Golfbollar', sub: 'Golfsajt',       theme: 'golf',
+              sprites: [S_BALL], size: [22, 42], dur: [9, 16], sway: [12, 36], spin: [90, 300] },
+  ghost:    { name: 'Spöken',     sub: 'Halloween',      colors: { dark: '#1a1026', green: '#5b3a8c', leaf: '#ff8a1f' },
+              sprites: [S_GHOST, S_GHOST, S_GHOST, S_PUMPKIN], size: [34, 58], dur: [11, 19], sway: [20, 50], spin: [8, 16] },
+  leaf:     { name: 'Höstlöv',    sub: 'Höstlov',        colors: { dark: '#2f2510', green: '#7d8a2e', leaf: '#f28c28' },
+              sprites: [leaf('#d1461a'), leaf('#f28c28'), leaf('#e9b429'), leaf('#a8541f')], size: [22, 40], dur: [8, 14], sway: [40, 90], spin: [60, 160] },
+  snow:     { name: 'Snö',        sub: 'Jul och vinter', colors: { dark: '#0b3524', green: '#2a9a5c', leaf: '#bfe8ff' },
+              sprites: [S_SNOW], size: [18, 36], dur: [9, 16], sway: [15, 40], spin: [30, 90] },
+  petal:    { name: 'Blomblad',   sub: 'Vår',            colors: { dark: '#12452f', green: '#3fb970', leaf: '#f4a6c0' },
+              sprites: [petal('#ffd3e2', '#f58fb0'), petal('#ffe3ec', '#f9a8c4'), petal('#ffc2d6', '#ee7fa5')], size: [14, 26], dur: [9, 15], sway: [30, 70], spin: [40, 120] },
+  confetti: { name: 'Konfetti',   sub: 'Rea och kampanj', colors: { dark: '#0b3524', green: '#2a9a5c', leaf: '#ffb703' },
+              sprites: CONF.flatMap(confetti), size: [8, 14], dur: [5, 9], sway: [10, 30], spin: [120, 300] },
+};
+Object.values(FX).forEach(f => { f.icon = f.icon || f.sprites[0].src; });
+FX.leaf.icon = FX.leaf.sprites[1].src;
+FX.ghost.icon = FX.ghost.sprites[0].src;
+const FX_AMOUNT = { few: 'Få', normal: 'Lagom', many: 'Många' };
+
+const rand = (a, b) => a + Math.random() * (b - a);
+const fxLayer = document.createElement('div');
+fxLayer.id = 'fx'; fxLayer.setAttribute('aria-hidden', 'true');
+document.body.appendChild(fxLayer);
+
+function applyFx(id, amount = 'normal') {
+  fxLayer.replaceChildren();
+  const f = FX[id];
+  if (!f || !f.sprites || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const base = { few: 10, normal: 20, many: 34 }[amount] || 20;
+  const n = Math.round(base * (innerWidth < 700 ? 0.6 : 1));
+  for (let k = 0; k < n; k++) {
+    const sp = f.sprites[Math.floor(Math.random() * f.sprites.length)];
+    const w = rand(...f.size), dur = rand(...f.dur);
+    const p = document.createElement('span');
+    p.className = 'fx-p';
+    p.style.cssText = `left:${rand(-2, 100)}%;width:${w}px;height:${w * sp.r}px;opacity:${rand(0.72, 1)};animation-duration:${dur}s;animation-delay:${-rand(0, dur)}s;--sway:${rand(...f.sway)}px;--spin:${rand(...f.spin)}deg`;
+    const i = document.createElement('i');
+    i.style.backgroundImage = `url("${sp.src}")`;
+    i.style.animationDuration = `${rand(2.5, 5.5)}s`;
+    i.style.animationDelay = `${-rand(0, 4)}s`;
+    p.appendChild(i);
+    fxLayer.appendChild(p);
+  }
 }
 
 const TEXT_DEFAULTS = {
@@ -696,6 +788,7 @@ const saveCart = () => { try { localStorage.setItem('s2g-cart', JSON.stringify(c
 
 async function shopInit() {
   $('#shop').hidden = false;
+  applyFx(settings.effect, settings.fx_amount);
   $('#yr').textContent = new Date().getFullYear();
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const svg = $('#hero-art svg');
@@ -863,11 +956,12 @@ click.tab = el => tab(el.dataset.v);
 
 function tab(name) {
   draft = null; applyTheme(styleState());          // osparade stilförändringar rullas tillbaka
+  applyFx('none');
   $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === name));
   ['orders', 'products', 'look', 'content'].forEach(t => ($('#t-' + t).hidden = t !== name));
   if (name === 'orders') loadOrders();
   if (name === 'products') loadAdminProducts();
-  if (name === 'look') renderLook();
+  if (name === 'look') { renderLook(); applyFx(draft.effect, draft.fx_amount); }
   if (name === 'content') renderContent();
 }
 
@@ -1061,6 +1155,11 @@ const LOOK = [
 
 function renderLook() {
   draft = draft || styleState();
+  const fxCards = Object.entries(FX).map(([id, f]) => `
+    <button type="button" class="fxcard ${draft.effect === id ? 'on' : ''}" data-act="fx" data-v="${id}">
+      <img src="${f.icon}" alt=""><b>${f.name}</b><small>${f.sub}</small>
+    </button>`).join('');
+  const amountOpts = Object.entries(FX_AMOUNT).map(([k, v]) => `<option value="${k}" ${draft.fx_amount === k ? 'selected' : ''}>${v}</option>`).join('');
   const swatches = Object.entries(THEMES).map(([id, t]) => `
     <button type="button" class="swatch ${draft.theme === id ? 'on' : ''}" data-act="theme" data-v="${id}">
       <span class="dots"><i style="background:${t.dark}"></i><i style="background:${t.green}"></i><i style="background:${t.leaf}"></i></span>${t.name}
@@ -1079,14 +1178,20 @@ function renderLook() {
     </div>`).join('');
   $('#t-look').innerHTML = `
     <div class="panel-box">
-      <h3>Färger och typsnitt</h3>
+      <h3>Tema och stil</h3>
       <p class="muted">Ändringarna syns direkt här i admin. Klicka på Spara stil för att visa dem i butiken.</p>
+      <h4>Tema</h4>
+      <p class="muted">Välj vad som ska falla över hemsidan. Temat byter också färger, som du kan justera efteråt.</p>
+      <div class="fxgrid">${fxCards}</div>
+      <label class="field fxamount"><span>Mängd</span><select data-change="fx-amount">${amountOpts}</select></label>
+      <h4>Färger</h4>
       <div class="swatches">${swatches}</div>
       <div class="pickers">${picker('dark', 'Mörk färg')}${picker('green', 'Huvudfärg')}${picker('leaf', 'Ljus accent')}</div>
+      <h4>Typsnitt</h4>
       <label class="field"><span>Typsnitt för rubriker</span><select data-change="font">${fontOpts}</select></label>
       <div class="pact">
         <button class="btn btn-dark" data-act="style-save">Spara stil</button>
-        <button class="btn btn-ghost" data-act="style-reset">Tillbaka till golfgrön</button>
+        <button class="btn btn-ghost" data-act="style-reset">Återställ till standard</button>
       </div>
     </div>
     <div class="look-imgs">${imgs}</div>`;
@@ -1118,14 +1223,26 @@ inputs.color = el => {
   $$('.swatch').forEach(b => b.classList.remove('on'));
 };
 change.font = el => { draft = { ...draft, font_head: el.value }; applyTheme(draft); };
+click.fx = el => {
+  const f = FX[el.dataset.v];
+  draft = { ...draft, effect: el.dataset.v };
+  if (f.theme) {
+    const t = THEMES[f.theme];
+    draft = { ...draft, theme: f.theme, c_dark: t.dark, c_green: t.green, c_leaf: t.leaf };
+  } else if (f.colors) {
+    draft = { ...draft, theme: 'custom', c_dark: f.colors.dark, c_green: f.colors.green, c_leaf: f.colors.leaf };
+  }
+  applyTheme(draft); applyFx(draft.effect, draft.fx_amount); renderLook();
+};
+change['fx-amount'] = el => { draft = { ...draft, fx_amount: el.value }; applyFx(draft.effect, draft.fx_amount); };
 click['style-reset'] = () => {
   const t = THEMES.golf;
-  draft = { theme: 'golf', c_dark: t.dark, c_green: t.green, c_leaf: t.leaf, font_head: 'fraunces' };
-  applyTheme(draft); renderLook();
+  draft = { theme: 'golf', c_dark: t.dark, c_green: t.green, c_leaf: t.leaf, font_head: 'fraunces', effect: 'none', fx_amount: 'normal' };
+  applyTheme(draft); applyFx('none'); renderLook();
 };
 click['style-save'] = async () => {
   const d = draft || styleState();
-  await saveSettings({ theme: d.theme, c_dark: d.c_dark, c_green: d.c_green, c_leaf: d.c_leaf, font_head: d.font_head });
+  await saveSettings({ theme: d.theme, c_dark: d.c_dark, c_green: d.c_green, c_leaf: d.c_leaf, font_head: d.font_head, effect: d.effect, fx_amount: d.fx_amount });
   toast('Stilen sparades. Den syns nu i butiken.');
 };
 

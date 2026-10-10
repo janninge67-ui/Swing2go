@@ -267,6 +267,57 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
 .fxcard small{color:var(--muted);font-size:.8rem}
 .fxamount{max-width:220px}
 
+/* =====================  Förtroenderad och betyg  ===================== */
+.rating{display:flex;align-items:center;gap:.5rem;margin:.2rem 0 -.3rem;font-size:.9rem;color:#cde3d6}
+.rating .stars{color:#f2c14e;letter-spacing:1px}
+.trustbar{background:var(--mist);border-bottom:1px solid var(--line)}
+.trustbar .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.trustbar div{display:flex;align-items:center;gap:.55rem;padding:.85rem 0;font-size:.85rem;font-weight:600;color:var(--fairway)}
+.trustbar svg{width:20px;height:20px;flex:none;color:var(--green)}
+/* =====================  Recensioner  ===================== */
+.rev-summary{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
+.rev-summary .big{font-family:var(--display);font-size:2.2rem;font-weight:600;line-height:1}
+.rev-summary .stars{color:#f2c14e;letter-spacing:2px;font-size:1.15rem}
+.rev-summary .stars.sm{font-size:1rem;letter-spacing:1px}
+.rev-summary .count{color:var(--muted);font-size:.92rem}
+.revlist{display:grid;gap:1rem;margin-top:1.3rem}
+.revcard{border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem}
+.revcard .rhead{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+.revcard b{font-weight:700}
+.revcard .rdate{color:var(--muted);font-size:.82rem}
+.revcard p{margin-top:.4rem;color:var(--ink)}
+.starpick{display:flex;gap:.3rem}
+.starpick button{background:none;border:0;font-size:1.7rem;line-height:1;cursor:pointer;color:var(--line);padding:.1rem}
+.starpick button.on{color:#f2c14e}
+.rev-admin{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;background:#fff;border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem;margin-top:.7rem;flex-wrap:wrap}
+.rev-admin .stars{color:#f2c14e;letter-spacing:1px}
+.rev-admin.pending{border-color:var(--leaf)}
+.rev-admin .ract{display:flex;gap:.6rem;flex-shrink:0}
+
+/* =====================  Besökare  ===================== */
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.2rem}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.2rem}
+.stat-card .n{font-family:var(--display);font-size:2rem;font-weight:600;line-height:1}
+.stat-card .l{color:var(--muted);font-size:.85rem;margin-top:.3rem}
+.viz-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:1.2rem;align-items:start}
+.daybars{display:grid;gap:.45rem}
+.daybar{display:grid;grid-template-columns:5.2rem 1fr 2.2rem;gap:.7rem;align-items:center;font-size:.85rem}
+.daybar .track{background:var(--mist);border-radius:999px;height:10px;overflow:hidden}
+.daybar .fill{background:var(--green);height:100%;border-radius:999px}
+.breaklist{display:grid;gap:.5rem}
+.breakrow{display:grid;grid-template-columns:7.5rem 1fr 2.2rem;gap:.7rem;align-items:center;font-size:.88rem}
+.breakrow .track{background:var(--mist);border-radius:999px;height:8px;overflow:hidden}
+.breakrow .fill{background:var(--forest);height:100%;border-radius:999px}
+.vrow{display:grid;grid-template-columns:9rem 1fr 6rem 4.5rem;gap:.8rem;padding:.55rem 0;border-bottom:1px solid var(--line);font-size:.85rem;align-items:center}
+.vrow:first-child{border-top:1px solid var(--line)}
+.vrow .muted2{color:var(--muted)}
+@media (max-width:820px){.viz-grid{grid-template-columns:1fr}.vrow{grid-template-columns:1fr 1fr}.vrow>:nth-child(3),.vrow>:nth-child(4){font-size:.78rem}}
+
+@media (max-width:820px){.trustbar .wrap{grid-template-columns:1fr 1fr}}
+
+/* Kvalitetsbetyg på produkter */
+.grade{position:absolute;top:.7rem;right:.7rem;background:#fff;border:1.5px solid var(--forest);color:var(--forest);font-weight:800;font-size:.72rem;padding:.15rem .5rem;border-radius:6px;font-family:var(--display)}
+
 @media (max-width:820px){
   .hero{align-items:flex-start;min-height:0}
   .hero-grid{padding-block:3rem 18rem}
@@ -289,6 +340,14 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
 
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ic-truck" viewBox="0 0 24 24"><path d="M2 5h11v9H2zM13 9h4l4 4v1h-8zM5 18a2 2 0 100-4 2 2 0 000 4zM17 18a2 2 0 100-4 2 2 0 000 4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 12.5l2.6 2.6L16 9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V8a4 4 0 018 0v2.5" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="ic-return" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 2.6 5.9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 8v4h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
 <!-- Golfbollen (används överallt) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -406,11 +465,21 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
     <div class="wrap hero-grid">
       <div>
         <h1 data-t="hero_title">Spela mer,<br>betala mindre.</h1>
+        <p class="rating" id="rating" hidden></p>
         <p class="lead" data-t="hero_text">Begagnade golfbollar i bra skick. Du handlar som gäst – inget konto och ingen inloggning.</p>
         <a class="btn btn-primary" href="#butik" data-t="hero_button">Se bollarna</a>
       </div>
     </div>
   </section>
+
+  <div class="trustbar" id="trustbar" hidden>
+    <div class="wrap">
+      <div><svg viewBox="0 0 24 24"><use href="#ic-truck"/></svg><span data-t="trust1"></span></div>
+      <div><svg viewBox="0 0 24 24"><use href="#ic-check"/></svg><span data-t="trust2"></span></div>
+      <div><svg viewBox="0 0 24 24"><use href="#ic-lock"/></svg><span data-t="trust3"></span></div>
+      <div><svg viewBox="0 0 24 24"><use href="#ic-return"/></svg><span data-t="trust4"></span></div>
+    </div>
+  </div>
 
   <main id="butik" class="wrap section">
     <div class="section-head">
@@ -419,6 +488,18 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
     </div>
     <div class="grid" id="grid"><p class="empty">Laddar bollar…</p></div>
   </main>
+
+  <section id="recensioner" class="wrap section">
+    <div class="section-head">
+      <h2>Recensioner</h2>
+      <button class="btn btn-dark btn-sm" data-act="open-review">Lämna en recension</button>
+    </div>
+    <div class="rev-summary" id="rev-summary" hidden>
+      <span class="big" id="rev-avg"></span>
+      <div><div class="stars" id="rev-stars"></div><div class="count" id="rev-count"></div></div>
+    </div>
+    <div class="revlist" id="rev-list"></div>
+  </section>
 
   <section id="galleri" class="wrap section" hidden>
     <div class="section-head"><h2 data-t="gallery_title">Bilder</h2></div>
@@ -481,6 +562,33 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
     <img id="lb-img" alt="">
     <p id="lb-cap"></p>
   </dialog>
+  <dialog id="review-dialog">
+    <form id="rev-form" class="co">
+      <div class="co-head"><h2>Lämna en recension</h2><button type="button" class="x" data-act="close-dialog" aria-label="Stäng">×</button></div>
+      <p class="muted">Din recension visas i butiken så fort vi har godkänt den.</p>
+      <label class="field"><span>Betyg</span>
+        <div class="starpick" id="rev-starpick">
+          <button type="button" data-v="1">★</button><button type="button" data-v="2">★</button><button type="button" data-v="3">★</button><button type="button" data-v="4">★</button><button type="button" data-v="5">★</button>
+        </div>
+        <input type="hidden" name="rating" required>
+      </label>
+      <label class="field"><span>Namn</span><input name="name" required maxlength="60" autocomplete="name"></label>
+      <label class="field"><span>Kommentar (valfritt)</span><textarea name="comment" rows="3" maxlength="500"></textarea></label>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="err" id="rev-err" role="alert"></p>
+      <button class="btn btn-primary wide" id="rev-send" type="submit">Skicka recension</button>
+    </form>
+  </dialog>
+
+  <dialog id="review-done">
+    <div class="done">
+      <svg class="done-ball" viewBox="0 0 100 100" aria-hidden="true"><use href="#ball"/></svg>
+      <h2>Tack för din recension</h2>
+      <p>Den visas i butiken så snart vi har godkänt den.</p>
+      <button class="btn btn-dark" data-act="close-dialog">Stäng</button>
+    </div>
+  </dialog>
+
 </div>
 
 <!-- ============================ ADMIN ============================ -->
@@ -509,6 +617,8 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
   <section id="panel" class="wrap" hidden>
     <nav class="tabs">
       <button class="on" data-act="tab" data-v="orders">Ordrar <i id="new-count"></i></button>
+      <button data-act="tab" data-v="reviews">Recensioner <i id="rev-new-count"></i></button>
+      <button data-act="tab" data-v="visits">Besökare</button>
       <button data-act="tab" data-v="products">Produkter</button>
       <button data-act="tab" data-v="look">Utseende</button>
       <button data-act="tab" data-v="content">Innehåll</button>
@@ -519,6 +629,25 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
       <div id="orders-list"></div>
     </div>
 
+    <div id="t-reviews" hidden>
+      <div id="admin-rev-list"></div>
+    </div>
+
+    <div id="t-visits" hidden>
+      <div class="stat-cards" id="vstat-cards"></div>
+      <div class="viz-grid">
+        <div class="panel-box"><h3>Besök per dag, senaste 14 dagarna</h3><div class="daybars" id="vdays"></div></div>
+        <div style="display:grid;gap:1.2rem">
+          <div class="panel-box"><h3>Varifrån de kom</h3><div class="breaklist" id="vrefs"></div></div>
+          <div class="panel-box"><h3>Mobil eller dator</h3><div class="breaklist" id="vdevices"></div></div>
+        </div>
+      </div>
+      <div class="panel-box" style="margin-top:1.2rem">
+        <h3>Senaste besöken</h3>
+        <div id="vlist"></div>
+      </div>
+    </div>
+
     <div id="t-products" hidden>
       <form id="p-form" class="panel-box">
         <h3 id="p-title">Lägg till produkt</h3>
@@ -527,6 +656,7 @@ dialog::backdrop{background:rgba(6,28,19,.6)}
           <label class="field"><span>Kategori</span><input name="category" list="cats" placeholder="Golfbollar" maxlength="60"><datalist id="cats"></datalist></label>
           <label class="field"><span>Pris (kr)</span><input name="price" type="number" min="0" step="1" required></label>
           <label class="field"><span>Antal i lager</span><input name="stock" type="number" min="0" step="1" required value="1"></label>
+          <label class="field"><span>Kvalitetsbetyg (valfritt)</span><select name="grade"><option value="">Inget betyg</option><option value="A">Grad A – som nytt</option><option value="B">Grad B – bra skick</option><option value="C">Grad C – för range/träning</option></select></label>
           <label class="field full"><span>Beskrivning</span><textarea name="description" rows="3" maxlength="600"></textarea></label>
           <label class="field full"><span>Bild <em id="p-imghint" class="muted"></em></span><input name="img" type="file" accept="image/*"></label>
         </div>
@@ -730,6 +860,10 @@ function applyFx(id, amount = 'normal') {
 
 const TEXT_DEFAULTS = {
   notice: '',
+  trust1: 'Skickas inom 1–2 dagar',
+  trust2: 'Handkontrollerat skick',
+  trust3: 'Säker betalning',
+  trust4: 'Öppet köp i 14 dagar',
   hero_title: 'Spela mer,\nbetala mindre.',
   hero_text: 'Begagnade golfbollar i bra skick. Du handlar som gäst – inget konto och ingen inloggning.',
   hero_button: 'Se bollarna',
@@ -748,6 +882,9 @@ function applyContent() {
   const n = (settings.notice || '').trim();
   $('#notice').textContent = n;
   $('#notice').hidden = !n;
+
+  const anyTrust = ['trust1', 'trust2', 'trust3', 'trust4'].some(k => (settings[k] || '').trim());
+  $('#trustbar').hidden = !anyTrust;
 }
 
 function galleryList() {
@@ -798,6 +935,7 @@ async function shopInit() {
   renderProducts();
   renderCart();
   renderGallery();
+  await loadReviews();
 }
 
 async function loadProducts() {
@@ -819,7 +957,7 @@ function tile(p) {
   const out = p.stock <= 0;
   const badge = out ? 'Slut i lager' : p.stock <= 5 ? `Endast ${p.stock} kvar` : '';
   return `<article class="tile ${out ? 'out' : ''}">
-    <div class="thumb">${thumb(p)}${badge ? `<span class="badge">${badge}</span>` : ''}</div>
+    <div class="thumb">${thumb(p)}${badge ? `<span class="badge">${badge}</span>` : ''}${p.grade ? `<span class="grade">Grad ${esc(p.grade)}</span>` : ''}</div>
     <h3>${esc(p.name)}</h3>
     <p class="desc">${esc(p.description)}</p>
     <div class="buy">
@@ -926,6 +1064,77 @@ $('#co-form').addEventListener('submit', async e => {
 });
 
 /* =====================================================================
+   RECENSIONER (butik)
+   ===================================================================== */
+let reviews = [];
+
+async function loadReviews() {
+  const { data, error } = await sb.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false });
+  if (error) { reviews = []; renderReviews(); return; }
+  reviews = data;
+  renderReviews();
+}
+
+function renderReviews() {
+  const n = reviews.length;
+  const avg = n ? reviews.reduce((s, r) => s + r.rating, 0) / n : 0;
+  const stars = c => '★'.repeat(c) + '☆'.repeat(5 - c);
+
+  $('#rev-summary').hidden = !n;
+  $('#rating').hidden = !n;
+  if (n) {
+    $('#rev-avg').textContent = avg.toFixed(1).replace('.', ',');
+    $('#rev-stars').textContent = stars(Math.round(avg));
+    $('#rev-count').textContent = `baserat på ${n} recension${n === 1 ? '' : 'er'}`;
+    $('#rating').innerHTML = `<span class="stars sm">${stars(Math.round(avg))}</span> ${avg.toFixed(1).replace('.', ',')} av 5 · ${n} recension${n === 1 ? '' : 'er'}`;
+  }
+
+  $('#rev-list').innerHTML = n ? reviews.slice(0, 12).map(r => `
+    <div class="revcard">
+      <div class="rhead"><span><b>${esc(r.name)}</b> <span class="stars sm">${stars(r.rating)}</span></span>
+        <span class="rdate">${new Date(r.created_at).toLocaleDateString('sv-SE', { dateStyle: 'medium' })}</span></div>
+      ${r.comment ? `<p>${esc(r.comment)}</p>` : ''}
+    </div>`).join('') : '<p class="empty">Inga recensioner ännu. Bli den första att skriva en!</p>';
+}
+
+let revScore = 0;
+click['open-review'] = () => {
+  revScore = 0;
+  $('#rev-form').reset();
+  $$('#rev-starpick button').forEach(b => b.classList.remove('on'));
+  $('#rev-form').elements.namedItem('rating').value = '';
+  $('#rev-err').textContent = '';
+  $('#review-dialog').showModal();
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('#rev-starpick button');
+  if (!b) return;
+  revScore = +b.dataset.v;
+  $('#rev-form').elements.namedItem('rating').value = revScore;
+  $$('#rev-starpick button').forEach(x => x.classList.toggle('on', +x.dataset.v <= revScore));
+});
+
+$('#rev-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target, btn = $('#rev-send'), err = $('#rev-err');
+  err.textContent = '';
+  if (!revScore) { err.textContent = 'Välj ett betyg.'; return; }
+  const body = Object.fromEntries(new FormData(form));
+  btn.disabled = true; btn.textContent = 'Skickar…';
+  try {
+    const res = await fetch('/api/review', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out.error || 'Något gick fel. Försök igen.');
+    $('#review-dialog').close();
+    $('#review-done').showModal();
+  } catch (x) {
+    err.textContent = x.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Skicka recension';
+  }
+});
+
+/* =====================================================================
    ADMIN
    ===================================================================== */
 const STATUS = { ny: 'Ny', betald: 'Betald', skickad: 'Skickad', avbruten: 'Avbruten' };
@@ -958,8 +1167,10 @@ function tab(name) {
   draft = null; applyTheme(styleState());          // osparade stilförändringar rullas tillbaka
   applyFx('none');
   $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === name));
-  ['orders', 'products', 'look', 'content'].forEach(t => ($('#t-' + t).hidden = t !== name));
+  ['orders', 'products', 'reviews', 'visits', 'look', 'content'].forEach(t => ($('#t-' + t).hidden = t !== name));
   if (name === 'orders') loadOrders();
+  if (name === 'reviews') loadAdminReviews();
+  if (name === 'visits') loadVisits();
   if (name === 'products') loadAdminProducts();
   if (name === 'look') { renderLook(); applyFx(draft.effect, draft.fx_amount); }
   if (name === 'content') renderContent();
@@ -1044,6 +1255,114 @@ click['ord-del'] = async el => {
   toast('Ordern togs bort');
 };
 
+/* ----- Besökare ----- */
+async function loadVisits() {
+  const since = new Date(Date.now() - 90 * 86400000).toISOString();
+  const { data, error } = await sb.from('visits').select('*').gte('created_at', since).order('created_at', { ascending: false }).limit(5000);
+  if (error) return toast('Kunde inte hämta besöksstatistik.', 'bad');
+  renderVisits(data);
+}
+
+function renderVisits(rows) {
+  const now = Date.now();
+  const inLast = (h) => rows.filter(r => now - new Date(r.created_at).getTime() < h * 3600000);
+  const today = inLast(24).length, week = inLast(24 * 7).length, total = rows.length;
+
+  $('#vstat-cards').innerHTML = `
+    <div class="stat-card"><div class="n">${today}</div><div class="l">Besök senaste 24 tim</div></div>
+    <div class="stat-card"><div class="n">${week}</div><div class="l">Besök senaste 7 dagarna</div></div>
+    <div class="stat-card"><div class="n">${total}</div><div class="l">Besök senaste 90 dagarna</div></div>`;
+
+  // Besök per dag, senaste 14 dagarna
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(now - i * 86400000);
+    const key = d.toISOString().slice(0, 10);
+    days.push({ key, label: d.toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' }), n: 0 });
+  }
+  const byDay = Object.fromEntries(days.map(d => [d.key, d]));
+  rows.forEach(r => { const k = r.created_at.slice(0, 10); if (byDay[k]) byDay[k].n++; });
+  const maxDay = Math.max(1, ...days.map(d => d.n));
+  $('#vdays').innerHTML = days.map(d => `
+    <div class="daybar"><span>${d.label}</span><span class="track"><span class="fill" style="width:${d.n / maxDay * 100}%"></span></span><span>${d.n}</span></div>`).join('');
+
+  // Varifrån besökarna kom
+  const refCounts = {};
+  rows.forEach(r => {
+    let label = 'Direkt eller okänt';
+    if (r.referrer) { try { label = new URL(r.referrer).hostname.replace(/^www\./, ''); } catch { label = 'Annan sida'; } }
+    refCounts[label] = (refCounts[label] || 0) + 1;
+  });
+  const topRefs = Object.entries(refCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const maxRef = Math.max(1, ...topRefs.map(r => r[1]));
+  $('#vrefs').innerHTML = topRefs.length ? topRefs.map(([name, n]) => `
+    <div class="breakrow"><span>${esc(name)}</span><span class="track"><span class="fill" style="width:${n / maxRef * 100}%"></span></span><span>${n}</span></div>`).join('') : '<p class="empty">Inga besök än.</p>';
+
+  // Mobil eller dator
+  const devCounts = {};
+  rows.forEach(r => { const d = r.device || 'Okänt'; devCounts[d] = (devCounts[d] || 0) + 1; });
+  const maxDev = Math.max(1, ...Object.values(devCounts));
+  $('#vdevices').innerHTML = Object.keys(devCounts).length ? Object.entries(devCounts).map(([name, n]) => `
+    <div class="breakrow"><span>${esc(name)}</span><span class="track"><span class="fill" style="width:${n / maxDev * 100}%"></span></span><span>${n}</span></div>`).join('') : '<p class="empty">Inga besök än.</p>';
+
+  // Senaste besöken
+  $('#vlist').innerHTML = rows.length ? rows.slice(0, 40).map(r => {
+    let ref = 'Direkt';
+    if (r.referrer) { try { ref = new URL(r.referrer).hostname.replace(/^www\./, ''); } catch { ref = 'Annan sida'; } }
+    const date = new Date(r.created_at).toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' });
+    return `<div class="vrow"><span>${date}</span><span class="muted2">${esc(ref)}</span><span>${esc(r.country || '–')}</span><span>${esc(r.device || '–')}</span></div>`;
+  }).join('') : '<p class="empty">Inga besök än. Det kan ta en liten stund innan de första visas.</p>';
+}
+
+/* ----- Recensioner ----- */
+let adminReviews = [];
+
+async function loadAdminReviews() {
+  const { data, error } = await sb.from('reviews').select('*').order('approved', { ascending: true }).order('created_at', { ascending: false });
+  if (error) return toast('Kunde inte hämta recensioner.', 'bad');
+  adminReviews = data;
+  $('#rev-new-count').textContent = adminReviews.filter(r => !r.approved).length || '';
+  renderAdminReviews();
+}
+
+function renderAdminReviews() {
+  const stars = c => '★'.repeat(c) + '☆'.repeat(5 - c);
+  $('#admin-rev-list').innerHTML = adminReviews.length ? adminReviews.map(r => `
+    <div class="rev-admin ${r.approved ? '' : 'pending'}">
+      <div>
+        <b>${esc(r.name)}</b> <span class="stars">${stars(r.rating)}</span>
+        <div class="muted" style="font-size:.82rem">${new Date(r.created_at).toLocaleString('sv-SE', { dateStyle: 'medium', timeStyle: 'short' })}${r.approved ? ' · Godkänd' : ' · Väntar på godkännande'}</div>
+        ${r.comment ? `<p style="margin-top:.4rem">${esc(r.comment)}</p>` : ''}
+      </div>
+      <div class="ract">
+        ${r.approved
+          ? `<button class="btn btn-ghost btn-sm" data-act="rev-hide" data-id="${r.id}">Dölj</button>`
+          : `<button class="btn btn-dark btn-sm" data-act="rev-approve" data-id="${r.id}">Godkänn</button>`}
+        <button class="btn btn-ghost btn-sm danger" data-act="rev-del" data-id="${r.id}">Ta bort</button>
+      </div>
+    </div>`).join('') : '<p class="empty">Inga recensioner ännu.</p>';
+}
+
+click['rev-approve'] = async el => {
+  const { error } = await sb.from('reviews').update({ approved: true }).eq('id', el.dataset.id);
+  if (error) throw new Error('Kunde inte godkänna recensionen.');
+  toast('Recensionen visas nu i butiken');
+  await loadAdminReviews();
+};
+click['rev-hide'] = async el => {
+  const { error } = await sb.from('reviews').update({ approved: false }).eq('id', el.dataset.id);
+  if (error) throw new Error('Kunde inte dölja recensionen.');
+  toast('Recensionen är dold från butiken');
+  await loadAdminReviews();
+};
+click['rev-del'] = async el => {
+  if (!confirm('Ta bort recensionen permanent?')) return;
+  const { error } = await sb.from('reviews').delete().eq('id', el.dataset.id);
+  if (error) throw new Error('Kunde inte ta bort recensionen.');
+  toast('Recensionen togs bort');
+  await loadAdminReviews();
+};
+
 /* ----- Produkter ----- */
 async function loadAdminProducts() {
   const { data, error } = await sb.from('products').select('*').order('created_at', { ascending: false });
@@ -1057,7 +1376,7 @@ function renderAdminProducts() {
   $('#p-list').innerHTML = adminProducts.length ? adminProducts.map(p => `
     <div class="prow ${p.active ? '' : 'off'}">
       <div class="pt">${thumb(p)}</div>
-      <div class="pinfo"><b>${esc(p.name)}</b><span>${esc(p.category || '')}</span><span>${kr(p.price_sek)}, ${p.stock} i lager</span></div>
+      <div class="pinfo"><b>${esc(p.name)}</b><span>${esc(p.category || '')}${p.grade ? ' · Grad ' + esc(p.grade) : ''}</span><span>${kr(p.price_sek)}, ${p.stock} i lager</span></div>
       <label class="sw"><input type="checkbox" data-change="p-active" data-id="${p.id}" ${p.active ? 'checked' : ''}> Synlig</label>
       <button class="btn btn-ghost btn-sm" data-act="p-edit" data-id="${p.id}">Redigera</button>
       <button class="btn btn-ghost btn-sm danger" data-act="p-del" data-id="${p.id}">Ta bort</button>
@@ -1093,6 +1412,7 @@ $('#p-form').addEventListener('submit', async e => {
     price_sek: parseInt(d.price, 10),
     stock: parseInt(d.stock, 10),
     category: d.category.trim() || 'Golfbollar',
+    grade: d.grade || null,
   };
   if (!row.name || Number.isNaN(row.price_sek) || Number.isNaN(row.stock) || row.price_sek < 0 || row.stock < 0) {
     return toast('Kontrollera namn, pris och lager.', 'bad');
@@ -1117,7 +1437,7 @@ $('#p-form').addEventListener('submit', async e => {
 click['p-edit'] = el => {
   const p = adminProducts.find(x => x.id === el.dataset.id);
   const f = $('#p-form');
-  const vals = { name: p.name, category: p.category || '', price: p.price_sek, stock: p.stock, description: p.description || '' };
+  const vals = { name: p.name, category: p.category || '', price: p.price_sek, stock: p.stock, description: p.description || '', grade: p.grade || '' };
   for (const [k, v] of Object.entries(vals)) f.elements.namedItem(k).value = v;
   f.elements.namedItem('img').value = '';
   editing = p.id;
@@ -1266,6 +1586,10 @@ click['clear-img'] = async el => {
 /* ----- Innehåll: texter och bildgalleri ----- */
 const TEXT_FIELDS = [
   ['notice', 'Meddelande överst på sidan (valfritt)', 'input', 140],
+  ['trust1', 'Förtroenderad, ruta 1 (valfri, visas bara om minst en ruta är ifylld)', 'input', 40],
+  ['trust2', 'Förtroenderad, ruta 2', 'input', 40],
+  ['trust3', 'Förtroenderad, ruta 3', 'input', 40],
+  ['trust4', 'Förtroenderad, ruta 4', 'input', 40],
   ['hero_title', 'Stor rubrik (ny rad ger radbrytning)', 'area2', 80],
   ['hero_text', 'Text under rubriken', 'area3', 260],
   ['hero_button', 'Text på knappen', 'input', 30],

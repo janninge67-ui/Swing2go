@@ -6,8 +6,8 @@
   // Dessa två är publika och får ligga i GitHub.
   // Hittas i Supabase: Project Settings -> API.
   "vars": {
-    "SUPABASE_URL": "https://DITT-PROJEKT.supabase.co",
-    "SUPABASE_ANON_KEY": "DIN-ANON-NYCKEL"
+    "SUPABASE_URL": "https://sgpxqblaylfctuufcwwv.supabase.co/rest/v1/",
+    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNncHhxYmxheWxmY3R1dWZjd3d2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2NzgwNjgsImV4cCI6MjEwNTI1NDA2OH0.Z9HLoTXtfv6bLwypcviIMIy9QcgdYxbDTmte8JOeboo"
   }
 
   // OBS: SUPABASE_SERVICE_KEY läggs INTE här.

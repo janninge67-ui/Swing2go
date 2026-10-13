@@ -1,4 +1,4 @@
-// Swing2Go – Cloudflare Worker
+// swing2go – Cloudflare Worker
 // Secrets som måste finnas (Settings → Variables and Secrets → typ "Secret"):
 //   SUPABASE_URL          t.ex. https://abcd1234.supabase.co
 //   SUPABASE_SERVICE_KEY  service_role-nyckeln (Supabase → Project Settings → API)
